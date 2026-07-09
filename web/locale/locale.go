@@ -17,9 +17,10 @@ import (
 )
 
 var (
-	i18nBundle   *i18n.Bundle
-	LocalizerWeb *i18n.Localizer
-	LocalizerBot *i18n.Localizer
+	i18nBundle       *i18n.Bundle
+	LocalizerWeb     *i18n.Localizer
+	LocalizerBot     *i18n.Localizer
+	localizerDefault *i18n.Localizer // always English; fallback for keys missing in the active locale
 )
 
 // I18nType represents the type of interface for internationalization.
@@ -45,6 +46,10 @@ func InitLocalizer(i18nFS embed.FS, settingService SettingService) error {
 	if err := parseTranslationFiles(i18nFS, i18nBundle); err != nil {
 		return err
 	}
+
+	// English fallback localizer: strings that exist only in en_US resolve
+	// through this instead of rendering blank in another language.
+	localizerDefault = i18n.NewLocalizer(i18nBundle, "en-US")
 
 	// setup bot locale
 	if err := initTGBotLocalizer(settingService); err != nil {
@@ -98,8 +103,20 @@ func I18n(i18nType I18nType, key string, params ...string) string {
 		TemplateData: templateData,
 	})
 	if err != nil {
+		// Key missing/failed in the active locale. Fall back to English so a
+		// string that exists only in en_US shows readable text instead of a
+		// blank (this is the common case for not-yet-translated keys, so it is
+		// not logged). Only if English also fails do we surface the key itself.
+		if localizerDefault != nil {
+			if enMsg, enErr := localizerDefault.Localize(&i18n.LocalizeConfig{
+				MessageID:    key,
+				TemplateData: templateData,
+			}); enErr == nil {
+				return enMsg
+			}
+		}
 		logger.Errorf("Failed to localize message: %v", err)
-		return ""
+		return key
 	}
 
 	return msg
@@ -130,6 +147,7 @@ func LocalizerMiddleware() gin.HandlerFunc {
 			if err := loadTranslationsFromDisk(i18nBundle); err != nil {
 				logger.Warning("i18n lazy load failed:", err)
 			}
+			localizerDefault = i18n.NewLocalizer(i18nBundle, "en-US")
 		}
 		var lang string
 
