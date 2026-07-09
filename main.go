@@ -69,20 +69,34 @@ func stdoutIsTTY() bool {
 	return fi.Mode()&os.ModeCharDevice != 0
 }
 
-// ansiVpnUI renders "vpn-ui" as a bold, per-letter multi-colour banner for CLI
-// output. Falls back to plain text when NO_COLOR is set or stdout isn't a TTY.
+// ansiVpnUI renders "[VPN-UI]" in the panel logo's colours — teal brackets,
+// deep-teal letters, a green hyphen — as a bold CLI banner. Falls back to plain
+// text when NO_COLOR is set or stdout isn't a TTY.
 func ansiVpnUI() string {
-	const text = "vpn-ui"
+	const text = "[VPN-UI]"
 	if os.Getenv("NO_COLOR") != "" || !stdoutIsTTY() {
 		return text
 	}
-	// bright red / yellow / green / cyan / blue / magenta — one per glyph.
-	colors := []string{"91", "93", "92", "96", "94", "95"}
+	// 24-bit colour matched to media/logo.png.
+	const (
+		reset   = "\x1b[0m"
+		bracket = "\x1b[1;38;2;23;212;212m" // bright teal  #17d4d4
+		letter  = "\x1b[1;38;2;14;165;165m" // deep teal    #0ea5a5
+		hyphen  = "\x1b[1;38;2;79;175;100m" // green        #4faf64
+	)
 	var b strings.Builder
-	for i, r := range text {
-		b.WriteString(fmt.Sprintf("\x1b[1;%sm%c", colors[i%len(colors)], r))
+	for _, r := range text {
+		switch r {
+		case '[', ']':
+			b.WriteString(bracket)
+		case '-':
+			b.WriteString(hyphen)
+		default:
+			b.WriteString(letter)
+		}
+		b.WriteRune(r)
 	}
-	b.WriteString("\x1b[0m")
+	b.WriteString(reset)
 	return b.String()
 }
 

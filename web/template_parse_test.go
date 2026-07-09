@@ -1,7 +1,9 @@
 package web
 
 import (
+	"bytes"
 	"html/template"
+	"strings"
 	"testing"
 )
 
@@ -27,5 +29,38 @@ func TestEditedTemplatesParse(t *testing.T) {
 		if _, err := template.New(f).Funcs(funcMap).Parse(string(b)); err != nil {
 			t.Errorf("%s failed to parse: %v", f, err)
 		}
+	}
+}
+
+// TestSidebarLogoSrcResolves renders the sidebar component with data and asserts the
+// brand logo <img> src is prefixed with base_path. The mark lives in the nested
+// "component/sidebar/content" template, which must be included WITH data ({{template
+// ... .}}) — otherwise .base_path is nil and the src renders empty, so the logo 404s.
+func TestSidebarLogoSrcResolves(t *testing.T) {
+	funcMap := template.FuncMap{
+		"i18n": func(key string, args ...string) (string, error) { return "", nil },
+	}
+	b, err := htmlFS.ReadFile("html/component/aSidebar.html")
+	if err != nil {
+		t.Fatalf("read aSidebar.html: %v", err)
+	}
+	tpl, err := template.New("aSidebar").Funcs(funcMap).Parse(string(b))
+	if err != nil {
+		t.Fatalf("parse: %v", err)
+	}
+	var buf bytes.Buffer
+	data := map[string]any{"base_path": "/test/", "request_uri": "/test/panel/"}
+	if err := tpl.ExecuteTemplate(&buf, "component/aSidebar", data); err != nil {
+		t.Fatalf("execute: %v", err)
+	}
+	// The component is a Vue template string inside <script>, so html/template
+	// JS-escapes the dynamic base_path (/ -> \/); the browser un-escapes it at
+	// parse time. Normalise before matching.
+	out := strings.ReplaceAll(buf.String(), `\/`, "/")
+	if !strings.Contains(out, "/test/assets/img/logo.png") {
+		t.Errorf("logo src not resolved with base_path (nil-data bug?); output:\n%s", out)
+	}
+	if strings.Contains(out, "<no value>") {
+		t.Errorf("template produced <no value> — data not threaded into the component")
 	}
 }

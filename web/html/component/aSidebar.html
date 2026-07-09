@@ -3,6 +3,11 @@
     <div class="ant-sidebar">
         <a-layout-sider :theme="themeSwitcher.currentTheme" collapsible :collapsed="collapsed"
             @collapse="(isCollapsed, type) => collapseHandle(isCollapsed, type)" breakpoint="md">
+            <div class="sidebar-brand">
+                <a href="{{ .base_path }}panel/" aria-label="VPN-UI">
+                    <img src="{{ .base_path }}assets/img/logo.png" alt="VPN-UI" />
+                </a>
+            </div>
             <a-theme-switch></a-theme-switch>
             <a-menu :theme="themeSwitcher.currentTheme" mode="inline" :selected-keys="activeTab"
                 @click="({key}) => openLink(key)">
@@ -16,6 +21,11 @@
             :wrap-class-name="themeSwitcher.currentTheme" :wrap-style="{ padding: 0 }" :style="{ height: '100%' }">
             <div class="drawer-handle" @click="toggleDrawer" slot="handle">
                 <a-icon :type="visible ? 'close' : 'menu-fold'"></a-icon>
+            </div>
+            <div class="sidebar-brand">
+                <a href="{{ .base_path }}panel/" aria-label="VPN-UI">
+                    <img src="{{ .base_path }}assets/img/logo.png" alt="VPN-UI" />
+                </a>
             </div>
             <a-theme-switch></a-theme-switch>
             <a-menu :theme="themeSwitcher.currentTheme" mode="inline" :selected-keys="activeTab"
@@ -34,6 +44,25 @@
 <style>
     .ant-sidebar>.ant-layout-sider {
         height: 100%;
+    }
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 16px 10px;
+    }
+
+    .sidebar-brand img {
+        display: block;
+        height: 24px;
+        width: auto;
+        max-width: 100%;
+    }
+
+    /* Collapsed rail (~80px) can't fit the wordmark — hide it there. */
+    .ant-layout-sider-collapsed .sidebar-brand {
+        display: none;
     }
 </style>
 
@@ -102,7 +131,7 @@
                 }
             }
         },
-        template: `{{template "component/sidebar/content"}}`,
+        template: `{{template "component/sidebar/content" .}}`,
     });
 </script>
 {{end}}
