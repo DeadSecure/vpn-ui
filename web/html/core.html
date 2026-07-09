@@ -665,6 +665,15 @@
     padding-top: 14px;
   }
 
+  /* antd-vue 2.7's a-space is a no-wrap inline-flex, so the action buttons spill
+     past a narrow card on small viewports. Make it a full-width flex row that
+     wraps, with a row gap to match a-space's 8px horizontal spacing. */
+  .core-actions > .ant-space {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
   /* Key/value rows inside a core card */
   .core-kv {
     display: flex;
