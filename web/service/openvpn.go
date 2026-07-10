@@ -540,12 +540,18 @@ func (s *OpenVpnService) buildServerConfig(inbound *model.Inbound, settings *ope
 	b.WriteString(fmt.Sprintf("client-config-dir %s/ccd-%s\n", dir, proto))
 	// User Limit is enforced by the client-connect hook for EVERY K (>=1): it leases
 	// each device an IP from the account's published block and rejects/evicts past the
-	// cap. duplicate-cn lets the hook own that decision uniformly — including K==1,
-	// where OpenVPN's native one-per-CN would otherwise leave two same-account clients
-	// fighting over the tunnel (a kick war) instead of cleanly rejecting the 2nd. The
-	// "accept" strategy kills the oldest device via the management socket (declared
-	// unconditionally below), so nothing extra is needed here.
-	b.WriteString("duplicate-cn\n")
+	// cap. duplicate-cn is emitted ONLY for K>=2, where K devices legitimately share one
+	// CN (each on a distinct block IP). For K==1 it MUST stay off: with it on, two
+	// same-account clients can hold the SAME single block IP at once (OpenVPN allows
+	// duplicate CNs to co-occupy an ifconfig-push'd address), and the async "accept"
+	// eviction can't win the race against persistent auto-reconnecting clients — they
+	// both sit on the one IP with a routing conflict ("connected but no internet"). With
+	// duplicate-cn off, OpenVPN's native one-per-CN guarantees a single live session: the
+	// hook still refuses the 2nd device under "reject" (exit 1), while "accept" admits the
+	// newcomer and OpenVPN drops the old same-CN session cleanly.
+	if normUserLimit(settings.UserLimit) >= 2 {
+		b.WriteString("duplicate-cn\n")
+	}
 	if settings.ClientToClient {
 		// Route traffic between clients internally in OpenVPN instead of sending
 		// it to the tun device (where TPROXY would hijack it into Xray). DCO
