@@ -44,7 +44,7 @@
 ## Установка панели
 
 ```bash
-sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh --random --systemd)
+sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh)
 ```
 
 ## Удаление панели
