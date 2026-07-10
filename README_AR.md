@@ -4,31 +4,31 @@
   <img src="https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/logo.png" alt="VPN-UI Logo" width="260">
 </p>
 
-This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei/3x-ui)** panel (version 2.9.3). The goal of this project is to add various protocols and set it up as an all-in-one panel with support for **Xray-core** features.
+هذا المشروع هو نسخة مُطوّرة من لوحة **[3X-UI](https://github.com/MHSanaei/3x-ui)** (الإصدار 2.9.3). يهدف هذا المشروع إلى إضافة بروتوكولات مختلفة وتقديمه كلوحة شاملة مع دعم إمكانيات **Xray-core**.
 
-## New Protocols
+## البروتوكولات الجديدة
 
 - PPTP
 - L2TP (RAW)
 - L2TP/IPsec
 - OpenVPN
 
-## New Features
+## الميزات الجديدة
 
-- **Client to Client** support, even as **Cross Inbound** (an internal connection between an L2TP user and an OpenVPN user)
-- Added **AES-256-GCM** and **AES-128-GCM** **Encryption** to the **Shadowsocks** protocol
-- Support for **XHTTP Object** in **Outbound**
-- Automatic installation script for **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (Cloudflare's official version)
-- A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
-- Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary
-- Exporting account links as **TXT** and **PDF**
-- Added **checkboxes** to clients and **Inbound**s
-- **Bulk Operation** support: changing users' traffic and time in bulk
+- إمكانية **Client to Client** حتى بصيغة **Cross Inbound** (اتصال داخلي بين مستخدم L2TP ومستخدم OpenVPN)
+- إضافة **Encryption** من نوعَي **AES-256-GCM** و **AES-128-GCM** إلى بروتوكول **Shadowsocks**
+- دعم **XHTTP Object** في **Outbound**
+- سكربت التثبيت التلقائي لـ **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (النسخة الرسمية من Cloudflare)
+- نواة [**Xray-core** المُعدَّلة](https://github.com/Sir-MmD/Xray-core) لإصلاح خطأ «Unsupported Cipher» في بروتوكول **Shadowsocks**
+- تجميع جميع الملفات (Geofile و Xray-core ونوى الـ Backend) داخل ملف ثنائي (binary) واحد
+- تصدير روابط الحسابات بصيغة **TXT** و **PDF**
+- إضافة **checkbox** إلى الـ client والـ Inbound
+- إمكانية **Bulk Operation**: تغيير حجم ووقت المستخدمين بشكل جماعي
 
-## Tested Operating Systems
+## أنظمة التشغيل المُختبَرة
 
 
-| | Distribution |Version |Version |Version |
+| | التوزيعة |الإصدار |الإصدار |الإصدار |
 |:---:|:---|:---:|:---:|:---:|
 | <img src="https://cdn.simpleicons.org/ubuntu" width="32" height="32" alt="Ubuntu"> | **Ubuntu** | `22.04` | `24.04` | `26.04` |
 | <img src="https://cdn.simpleicons.org/debian" width="32" height="32" alt="Debian"> | **Debian** | `12` | `13` | |
@@ -39,30 +39,30 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 
 
 > [!IMPORTANT]
-> It is strongly recommended that you install the panel on one of the tested operating systems, because there is a high chance that the new cores will not work correctly on other operating systems!
+> يُوصى بشدّة بتثبيت اللوحة على أنظمة التشغيل المُختبَرة؛ لأن احتمال ألّا تعمل النوى الجديدة بشكل صحيح على بقية أنظمة التشغيل مرتفع!
 
-## Installing the Panel
+## تثبيت اللوحة
 
 ```bash
 sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh --random --systemd)
 ```
 
-## Uninstalling the Panel
+## إزالة اللوحة
 
 ```bash
 sudo /opt/vpn-ui/vpn-ui-amd64 --uninstall
 ```
 
 > [!NOTE]
-> The database path, the **systemd** service, and all default ports have been changed, so you can install this panel alongside your other panels without any issues.
+> تم تغيير مسار قاعدة البيانات وخدمة systemd وجميع المنافذ الافتراضية، لذا يمكنك تثبيت هذه اللوحة بجانب لوحاتك الأخرى دون أي مشكلة.
 
-## Screenshots
+## لقطات الشاشة
 
-![Overview](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
-![Core Settings](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
+![نظرة عامة](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
+![إعدادات النواة](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
 
 
-## How the New Protocols Interact with Xray-core
+## كيفية تفاعل البروتوكولات الجديدة مع نواة Xray-core
 
 ```mermaid
 flowchart TB
@@ -115,26 +115,26 @@ flowchart TB
   NET -.->|"replies (symmetric path back)"| OUT
 ```
 
-## Building from Source
+## البناء من المصدر
 
 ```bash
 git clone https://github.com/Sir-MmD/vpn-ui.git && cd vpn-ui
 ./build.sh
 ```
 
-## E2E Testing
+## اختبار E2E
 
-![E2E Test](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
+![اختبار E2E](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
 
-A complete **E2E** test written in Python has been designed for this project inside the `test_unit` folder, which you are welcome to use. The steps are as follows:
+صُمِّم لهذا المشروع اختبار **E2E** كامل بلغة Python داخل مجلد `test_unit` يمكنك استخدامه. وخطواته كالتالي:
 
-1. Go into the `test_unit` folder and enter your desired settings in `config.toml`.
-2. Run the `setup.sh` script.
-3. Place the compiled binary inside the `test_subject` folder.
-4. Run `run.sh` with `sudo` privileges.
+1. ادخل إلى مجلد `test_unit` وأدخِل الإعدادات المطلوبة في `config.toml`.
+2. شغّل سكربت `setup.sh`.
+3. ضع الملف الثنائي (binary) المُجمَّع داخل مجلد `test_subject`.
+4. شغّل `run.sh` بصلاحيات `sudo`.
 
 > [!IMPORTANT]
-> The full E2E test is extremely time-consuming; if you have only made a small change to the project, it is better to test only that specific part using the `--tests` switch:
+> اختبار E2E الكامل يستغرق وقتاً طويلاً جداً؛ إذا أجريت تغييراً صغيراً فقط في المشروع، فمن الأفضل اختبار ذلك الجزء فقط باستخدام الخيار `--tests`:
 
 | Test ID | Description |
 | :--- | :--- |
@@ -151,13 +151,13 @@ A complete **E2E** test written in Python has been designed for this project ins
 | `uninstall` | `--uninstall` switch: install everything, tear down, assert clean host |
 | `export-js` | host-side Node TXT/PDF export test (no VM) |
 
-To test on only one specific operating system, you can use the `--only` switch:
+ولاختبار نظام تشغيل واحد محدّد فقط، يمكنك أيضاً استخدام الخيار `--only`:
 
 ```bash
 sudo ./run.sh --only ubuntu-24
 ```
 
-## Donate
+## التبرّع
 
 🔹USDC-Polygon: ```0xdC2Ab962954e8fA1502C44656c5A32CF2979568C```
 

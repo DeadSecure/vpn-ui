@@ -4,28 +4,28 @@
   <img src="https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/logo.png" alt="VPN-UI Logo" width="260">
 </p>
 
-This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei/3x-ui)** panel (version 2.9.3). The goal of this project is to add various protocols and set it up as an all-in-one panel with support for **Xray-core** features.
+این پروژه، یک نسخه‌ی ارتقایافته از پنل **[3X-UI](https://github.com/MHSanaei/3x-ui)** (نسخه‌ی 2.9.3) هستش.  هدف این پروژه اضافه کردن پروتکل های مختلف و راه اندازی بصورت یک پنل جامعه با پشتیبانی از قابلیت های **Xray-core**  هستش
 
-## New Protocols
+## پروتکل‌های جدید
 
 - PPTP
 - L2TP (RAW)
 - L2TP/IPsec
 - OpenVPN
 
-## New Features
+## امکانات جدید
 
-- **Client to Client** support, even as **Cross Inbound** (an internal connection between an L2TP user and an OpenVPN user)
-- Added **AES-256-GCM** and **AES-128-GCM** **Encryption** to the **Shadowsocks** protocol
-- Support for **XHTTP Object** in **Outbound**
-- Automatic installation script for **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (Cloudflare's official version)
-- A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
-- Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary
-- Exporting account links as **TXT** and **PDF**
-- Added **checkboxes** to clients and **Inbound**s
-- **Bulk Operation** support: changing users' traffic and time in bulk
+- قابلیت **Client to Client** حتی بصورت **Cross Inbound** (اتصال داخلی کاربر L2TP به کاربر OpenVPN)
+- اضافه‌شدن **Encryption** های **AES-256-GCM** و **AES-128-GCM** به پروتکل **Shadowsocks**
+- پشتیبانی از **XHTTP Object** در **Outbound**
+- اسکریپت نصب خودکار **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (نسخه‌ی رسمی Cloudflare)
+- هسته‌ی [**Xray-core** پچ‌شده](https://github.com/Sir-MmD/Xray-core) برای رفع خطای «Unsupported Cipher» در پروتکل **Shadowsocks**
+- باندل‌شدن همه‌ی فایل‌ها (Geofile، Xray-core و هسته‌های Backend) داخل یک فایل باینریِ واحد
+- خروجی گرفتن لینک اکانت ها بصورت **TXT** و **PDF**
+- اضافه شدن **checkbox** به کلاینت و Inbound ها
+- قابلیت **Bulk Operation**: تغییر حجم و زمان کاربر ها بصورت گروهی
 
-## Tested Operating Systems
+## سیستم‌عامل‌های تست شده
 
 
 | | Distribution |Version |Version |Version |
@@ -39,30 +39,30 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 
 
 > [!IMPORTANT]
-> It is strongly recommended that you install the panel on one of the tested operating systems, because there is a high chance that the new cores will not work correctly on other operating systems!
+> پیشنهاد می‌شه حتماً پنل رو روی سیستم‌عامل‌های تست‌شده نصب کنید؛ چون احتمال این‌که هسته‌های جدید روی بقیه‌ی سیستم‌عامل‌ها درست کار نکنن بالاست!
 
-## Installing the Panel
+## نصب پنل
 
 ```bash
 sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh --random --systemd)
 ```
 
-## Uninstalling the Panel
+## حذف پنل
 
 ```bash
 sudo /opt/vpn-ui/vpn-ui-amd64 --uninstall
 ```
 
 > [!NOTE]
-> The database path, the **systemd** service, and all default ports have been changed, so you can install this panel alongside your other panels without any issues.
+> مسیر دیتابیس، سرویس systemd و همه‌ی پورت‌های پیش‌فرض تغییر کرده‌اند، پس می‌تونید این پنل رو بدون هیچ مشکلی کنار پنل‌های دیگه‌تون نصب کنید.
 
-## Screenshots
+## اسکرین‌شات‌ها
 
-![Overview](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
-![Core Settings](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
+![نمای کلی](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
+![تنظیمات هسته](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
 
 
-## How the New Protocols Interact with Xray-core
+## نحوه‌ی تعامل پروتکل‌های جدید با هسته‌ی Xray-core
 
 ```mermaid
 flowchart TB
@@ -115,26 +115,26 @@ flowchart TB
   NET -.->|"replies (symmetric path back)"| OUT
 ```
 
-## Building from Source
+## کامپایل از سورس
 
 ```bash
 git clone https://github.com/Sir-MmD/vpn-ui.git && cd vpn-ui
 ./build.sh
 ```
 
-## E2E Testing
+## تست E2E
 
-![E2E Test](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
+![تست E2E](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
 
-A complete **E2E** test written in Python has been designed for this project inside the `test_unit` folder, which you are welcome to use. The steps are as follows:
+یک تست **E2E** کامل با Python داخل فولدر `test_unit` برای این پروژه طراحی شده که می‌تونید ازش استفاده کنید. مراحلش این‌طوریه:
 
-1. Go into the `test_unit` folder and enter your desired settings in `config.toml`.
-2. Run the `setup.sh` script.
-3. Place the compiled binary inside the `test_subject` folder.
-4. Run `run.sh` with `sudo` privileges.
+1. وارد فولدر `test_unit` بشید و تنظیمات دلخواه‌تون رو توی `config.toml` وارد کنید.
+2. اسکریپت `setup.sh` رو اجرا کنید.
+3. فایل باینریِ کامپایل‌شده رو داخل فولدر `test_subject` قرار بدید.
+4. `run.sh` رو با دسترسی `sudo` اجرا کنید.
 
 > [!IMPORTANT]
-> The full E2E test is extremely time-consuming; if you have only made a small change to the project, it is better to test only that specific part using the `--tests` switch:
+> تست کامل E2E به‌شدت زمان‌بره؛ اگه فقط یه تغییر کوچیک توی پروژه دادید، بهتره با سویچ `--tests` فقط همون بخش رو تست کنید:
 
 | Test ID | Description |
 | :--- | :--- |
@@ -151,13 +151,13 @@ A complete **E2E** test written in Python has been designed for this project ins
 | `uninstall` | `--uninstall` switch: install everything, tear down, assert clean host |
 | `export-js` | host-side Node TXT/PDF export test (no VM) |
 
-To test on only one specific operating system, you can use the `--only` switch:
+برای تست روی فقط یک سیستم‌عامل خاص هم می‌تونید از سویچ `--only` استفاده کنید:
 
 ```bash
 sudo ./run.sh --only ubuntu-24
 ```
 
-## Donate
+## دونیت
 
 🔹USDC-Polygon: ```0xdC2Ab962954e8fA1502C44656c5A32CF2979568C```
 

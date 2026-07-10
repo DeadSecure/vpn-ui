@@ -4,31 +4,31 @@
   <img src="https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/logo.png" alt="VPN-UI Logo" width="260">
 </p>
 
-This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei/3x-ui)** panel (version 2.9.3). The goal of this project is to add various protocols and set it up as an all-in-one panel with support for **Xray-core** features.
+本项目是 **[3X-UI](https://github.com/MHSanaei/3x-ui)** 面板（2.9.3 版本）的增强版。本项目旨在添加多种协议，并将其打造成一个支持 **Xray-core** 各项功能的综合性面板。
 
-## New Protocols
+## 新增协议
 
 - PPTP
 - L2TP (RAW)
 - L2TP/IPsec
 - OpenVPN
 
-## New Features
+## 新增功能
 
-- **Client to Client** support, even as **Cross Inbound** (an internal connection between an L2TP user and an OpenVPN user)
-- Added **AES-256-GCM** and **AES-128-GCM** **Encryption** to the **Shadowsocks** protocol
-- Support for **XHTTP Object** in **Outbound**
-- Automatic installation script for **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (Cloudflare's official version)
-- A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
-- Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary
-- Exporting account links as **TXT** and **PDF**
-- Added **checkboxes** to clients and **Inbound**s
-- **Bulk Operation** support: changing users' traffic and time in bulk
+- 支持 **Client to Client** 功能，甚至可以实现 **Cross Inbound**（L2TP 用户与 OpenVPN 用户之间的内部互联）
+- 为 **Shadowsocks** 协议新增了 **AES-256-GCM** 和 **AES-128-GCM** 两种 **Encryption**
+- 在 **Outbound** 中支持 **XHTTP Object**
+- **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)**（Cloudflare 官方版本）自动安装脚本
+- 经过[补丁修复的 **Xray-core**](https://github.com/Sir-MmD/Xray-core) 内核，用于修复 **Shadowsocks** 协议中的「Unsupported Cipher」错误
+- 将所有文件（Geofile、Xray-core 以及 Backend 内核）打包进单个二进制文件中
+- 以 **TXT** 和 **PDF** 格式导出账户链接
+- 为客户端和 Inbound 新增 **checkbox**
+- **Bulk Operation** 功能：批量修改用户的流量与时长
 
-## Tested Operating Systems
+## 已测试的操作系统
 
 
-| | Distribution |Version |Version |Version |
+| | 发行版 |版本 |版本 |版本 |
 |:---:|:---|:---:|:---:|:---:|
 | <img src="https://cdn.simpleicons.org/ubuntu" width="32" height="32" alt="Ubuntu"> | **Ubuntu** | `22.04` | `24.04` | `26.04` |
 | <img src="https://cdn.simpleicons.org/debian" width="32" height="32" alt="Debian"> | **Debian** | `12` | `13` | |
@@ -39,30 +39,30 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 
 
 > [!IMPORTANT]
-> It is strongly recommended that you install the panel on one of the tested operating systems, because there is a high chance that the new cores will not work correctly on other operating systems!
+> 强烈建议务必将面板安装在已测试的操作系统上；因为新内核在其他操作系统上无法正常工作的可能性很高！
 
-## Installing the Panel
+## 安装面板
 
 ```bash
 sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh --random --systemd)
 ```
 
-## Uninstalling the Panel
+## 卸载面板
 
 ```bash
 sudo /opt/vpn-ui/vpn-ui-amd64 --uninstall
 ```
 
 > [!NOTE]
-> The database path, the **systemd** service, and all default ports have been changed, so you can install this panel alongside your other panels without any issues.
+> 数据库路径、systemd 服务以及所有默认端口均已更改，因此您可以将本面板与您的其他面板并存安装，而不会产生任何问题。
 
-## Screenshots
+## 截图
 
-![Overview](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
-![Core Settings](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
+![总览](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
+![内核设置](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
 
 
-## How the New Protocols Interact with Xray-core
+## 新增协议与 Xray-core 内核的交互方式
 
 ```mermaid
 flowchart TB
@@ -115,26 +115,26 @@ flowchart TB
   NET -.->|"replies (symmetric path back)"| OUT
 ```
 
-## Building from Source
+## 从源码编译
 
 ```bash
 git clone https://github.com/Sir-MmD/vpn-ui.git && cd vpn-ui
 ./build.sh
 ```
 
-## E2E Testing
+## E2E 测试
 
-![E2E Test](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
+![E2E 测试](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
 
-A complete **E2E** test written in Python has been designed for this project inside the `test_unit` folder, which you are welcome to use. The steps are as follows:
+本项目在 `test_unit` 文件夹中设计了一套完整的、使用 Python 编写的 **E2E** 测试，您可以直接使用它。步骤如下：
 
-1. Go into the `test_unit` folder and enter your desired settings in `config.toml`.
-2. Run the `setup.sh` script.
-3. Place the compiled binary inside the `test_subject` folder.
-4. Run `run.sh` with `sudo` privileges.
+1. 进入 `test_unit` 文件夹，在 `config.toml` 中填写您想要的配置。
+2. 运行 `setup.sh` 脚本。
+3. 将编译好的二进制文件放入 `test_subject` 文件夹中。
+4. 以 `sudo` 权限运行 `run.sh`。
 
 > [!IMPORTANT]
-> The full E2E test is extremely time-consuming; if you have only made a small change to the project, it is better to test only that specific part using the `--tests` switch:
+> 完整的 E2E 测试非常耗时；如果您只对项目做了一处小改动，最好使用 `--tests` 开关只测试相应的那一部分：
 
 | Test ID | Description |
 | :--- | :--- |
@@ -151,13 +151,13 @@ A complete **E2E** test written in Python has been designed for this project ins
 | `uninstall` | `--uninstall` switch: install everything, tear down, assert clean host |
 | `export-js` | host-side Node TXT/PDF export test (no VM) |
 
-To test on only one specific operating system, you can use the `--only` switch:
+如果只想在某一个特定的操作系统上进行测试，也可以使用 `--only` 开关：
 
 ```bash
 sudo ./run.sh --only ubuntu-24
 ```
 
-## Donate
+## 捐赠
 
 🔹USDC-Polygon: ```0xdC2Ab962954e8fA1502C44656c5A32CF2979568C```
 

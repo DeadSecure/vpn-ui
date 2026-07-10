@@ -4,31 +4,31 @@
   <img src="https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/logo.png" alt="VPN-UI Logo" width="260">
 </p>
 
-This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei/3x-ui)** panel (version 2.9.3). The goal of this project is to add various protocols and set it up as an all-in-one panel with support for **Xray-core** features.
+Этот проект — улучшенная версия панели **[3X-UI](https://github.com/MHSanaei/3x-ui)** (версии 2.9.3). Цель проекта — добавить различные протоколы и реализовать её как комплексную панель с поддержкой возможностей **Xray-core**.
 
-## New Protocols
+## Новые протоколы
 
 - PPTP
 - L2TP (RAW)
 - L2TP/IPsec
 - OpenVPN
 
-## New Features
+## Новые возможности
 
-- **Client to Client** support, even as **Cross Inbound** (an internal connection between an L2TP user and an OpenVPN user)
-- Added **AES-256-GCM** and **AES-128-GCM** **Encryption** to the **Shadowsocks** protocol
-- Support for **XHTTP Object** in **Outbound**
-- Automatic installation script for **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (Cloudflare's official version)
-- A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
-- Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary
-- Exporting account links as **TXT** and **PDF**
-- Added **checkboxes** to clients and **Inbound**s
-- **Bulk Operation** support: changing users' traffic and time in bulk
+- Функция **Client to Client**, даже в режиме **Cross Inbound** (внутреннее соединение пользователя L2TP с пользователем OpenVPN)
+- Добавление **Encryption** **AES-256-GCM** и **AES-128-GCM** в протокол **Shadowsocks**
+- Поддержка **XHTTP Object** в **Outbound**
+- Скрипт автоматической установки **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (официальная версия Cloudflare)
+- [Пропатченное ядро **Xray-core**](https://github.com/Sir-MmD/Xray-core) для устранения ошибки «Unsupported Cipher» в протоколе **Shadowsocks**
+- Объединение всех файлов (Geofile, Xray-core и ядер Backend) в один единый бинарный файл
+- Экспорт ссылок аккаунтов в форматах **TXT** и **PDF**
+- Добавление **checkbox** к клиентам и Inbound
+- Функция **Bulk Operation**: групповое изменение объёма трафика и времени пользователей
 
-## Tested Operating Systems
+## Протестированные операционные системы
 
 
-| | Distribution |Version |Version |Version |
+| | Дистрибутив |Версия |Версия |Версия |
 |:---:|:---|:---:|:---:|:---:|
 | <img src="https://cdn.simpleicons.org/ubuntu" width="32" height="32" alt="Ubuntu"> | **Ubuntu** | `22.04` | `24.04` | `26.04` |
 | <img src="https://cdn.simpleicons.org/debian" width="32" height="32" alt="Debian"> | **Debian** | `12` | `13` | |
@@ -39,30 +39,30 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 
 
 > [!IMPORTANT]
-> It is strongly recommended that you install the panel on one of the tested operating systems, because there is a high chance that the new cores will not work correctly on other operating systems!
+> Настоятельно рекомендуется устанавливать панель только на протестированные операционные системы, так как высока вероятность, что новые ядра не будут корректно работать на других ОС!
 
-## Installing the Panel
+## Установка панели
 
 ```bash
 sudo bash <(curl -Ls https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/deploy.sh --random --systemd)
 ```
 
-## Uninstalling the Panel
+## Удаление панели
 
 ```bash
 sudo /opt/vpn-ui/vpn-ui-amd64 --uninstall
 ```
 
 > [!NOTE]
-> The database path, the **systemd** service, and all default ports have been changed, so you can install this panel alongside your other panels without any issues.
+> Путь к базе данных, служба systemd и все порты по умолчанию были изменены, поэтому вы можете без каких-либо проблем установить эту панель рядом с другими вашими панелями.
 
-## Screenshots
+## Скриншоты
 
-![Overview](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
-![Core Settings](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
+![Общий вид](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/overview.png)
+![Настройки ядра](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/core_Settings.png)
 
 
-## How the New Protocols Interact with Xray-core
+## Как новые протоколы взаимодействуют с ядром Xray-core
 
 ```mermaid
 flowchart TB
@@ -115,26 +115,26 @@ flowchart TB
   NET -.->|"replies (symmetric path back)"| OUT
 ```
 
-## Building from Source
+## Компиляция из исходного кода
 
 ```bash
 git clone https://github.com/Sir-MmD/vpn-ui.git && cd vpn-ui
 ./build.sh
 ```
 
-## E2E Testing
+## E2E-тест
 
-![E2E Test](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
+![Тест E2E](https://raw.githubusercontent.com/Sir-MmD/vpn-ui/refs/heads/main/media/test_unit.png)
 
-A complete **E2E** test written in Python has been designed for this project inside the `test_unit` folder, which you are welcome to use. The steps are as follows:
+Для этого проекта разработан полноценный **E2E**-тест на Python в папке `test_unit`, которым вы можете воспользоваться. Порядок действий следующий:
 
-1. Go into the `test_unit` folder and enter your desired settings in `config.toml`.
-2. Run the `setup.sh` script.
-3. Place the compiled binary inside the `test_subject` folder.
-4. Run `run.sh` with `sudo` privileges.
+1. Перейдите в папку `test_unit` и укажите нужные вам настройки в файле `config.toml`.
+2. Запустите скрипт `setup.sh`.
+3. Поместите скомпилированный бинарный файл в папку `test_subject`.
+4. Запустите `run.sh` с правами `sudo`.
 
 > [!IMPORTANT]
-> The full E2E test is extremely time-consuming; if you have only made a small change to the project, it is better to test only that specific part using the `--tests` switch:
+> Полный E2E-тест занимает очень много времени; если вы внесли в проект лишь небольшое изменение, лучше протестировать только соответствующую часть с помощью ключа `--tests`:
 
 | Test ID | Description |
 | :--- | :--- |
@@ -151,13 +151,13 @@ A complete **E2E** test written in Python has been designed for this project ins
 | `uninstall` | `--uninstall` switch: install everything, tear down, assert clean host |
 | `export-js` | host-side Node TXT/PDF export test (no VM) |
 
-To test on only one specific operating system, you can use the `--only` switch:
+Чтобы протестировать только на одной конкретной операционной системе, вы можете воспользоваться ключом `--only`:
 
 ```bash
 sudo ./run.sh --only ubuntu-24
 ```
 
-## Donate
+## Пожертвования
 
 🔹USDC-Polygon: ```0xdC2Ab962954e8fA1502C44656c5A32CF2979568C```
 
