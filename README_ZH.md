@@ -22,8 +22,15 @@
 - 经过[补丁修复的 **Xray-core**](https://github.com/Sir-MmD/Xray-core) 内核，用于修复 **Shadowsocks** 协议中的「Unsupported Cipher」错误
 - 将所有文件（Geofile、Xray-core 以及 Backend 内核）打包进单个二进制文件中
 - 以 **TXT** 和 **PDF** 格式导出账户链接
+- 支持**冻结（Freeze）**账户
 - 为客户端和 Inbound 新增 **checkbox**
-- **Bulk Operation** 功能：批量修改用户的流量与时长
+- **Bulk Operation** 功能：
+    * 批量修改账户流量
+    * 批量修改账户时长
+    * 批量启用/禁用账户
+    * 批量删除账户
+    * 批量删除 Inbound
+    * 批量**冻结/解冻**账户
 
 ## 已测试的操作系统
 

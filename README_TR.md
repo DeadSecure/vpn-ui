@@ -22,8 +22,15 @@ Bu proje, **[3X-UI](https://github.com/MHSanaei/3x-ui)** panelinin (2.9.3 sürü
 - **Shadowsocks** protokolündeki «Unsupported Cipher» hatasını gidermek için [yamalanmış **Xray-core**](https://github.com/Sir-MmD/Xray-core) çekirdeği
 - Tüm dosyaların (Geofile, Xray-core ve Backend çekirdekleri) tek bir binary dosyası içinde paketlenmesi
 - Hesap bağlantılarının **TXT** ve **PDF** olarak dışa aktarılması
+- Hesapları **dondurma (Freeze)** özelliği
 - İstemcilere ve Inbound'lara **checkbox** eklenmesi
-- **Bulk Operation** özelliği: kullanıcıların trafik ve sürelerini toplu olarak değiştirme
+- **Bulk Operation** özelliği:
+    * Hesapların trafiğini toplu değiştirme
+    * Hesapların süresini toplu değiştirme
+    * Hesapları toplu etkinleştirme/devre dışı bırakma
+    * Hesapları toplu silme
+    * Inbound'ları toplu silme
+    * Hesapları toplu **dondurma/çözme (Freeze/Un-Freeze)**
 
 ## Test Edilen İşletim Sistemleri
 

@@ -22,8 +22,15 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 - A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
 - Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary
 - Exporting account links as **TXT** and **PDF**
+- Ability to **Freeze** accounts
 - Added **checkboxes** to clients and **Inbound**s
-- **Bulk Operation** support: changing users' traffic and time in bulk
+- **Bulk Operation** support:
+    * Bulk change of accounts' traffic
+    * Bulk change of accounts' days
+    * Bulk enable/disable of accounts
+    * Bulk delete of accounts
+    * Bulk delete of Inbounds
+    * Bulk **Freeze/Un-Freeze** of accounts
 
 ## Tested Operating Systems
 

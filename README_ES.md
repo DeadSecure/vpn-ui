@@ -22,8 +22,15 @@ Este proyecto es una versión mejorada del panel **[3X-UI](https://github.com/MH
 - Núcleo [**Xray-core** parcheado](https://github.com/Sir-MmD/Xray-core) para solucionar el error «Unsupported Cipher» en el protocolo **Shadowsocks**
 - Empaquetado de todos los archivos (Geofile, Xray-core y los núcleos del Backend) dentro de un único archivo binario
 - Exportación de los enlaces de las cuentas en formato **TXT** y **PDF**
+- Posibilidad de **congelar (Freeze)** cuentas
 - Incorporación de **checkbox** a los clientes y a los Inbound
-- Función **Bulk Operation**: modificar de forma grupal el volumen de datos y el tiempo de los usuarios
+- Función **Bulk Operation**:
+    * Cambio grupal del volumen de datos de las cuentas
+    * Cambio grupal de los días de las cuentas
+    * Activación/desactivación grupal de cuentas
+    * Eliminación grupal de cuentas
+    * Eliminación grupal de Inbounds
+    * **Congelar/Descongelar** cuentas de forma grupal
 
 ## Sistemas operativos probados
 
