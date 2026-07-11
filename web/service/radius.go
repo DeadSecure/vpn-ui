@@ -310,6 +310,11 @@ func (s *RadiusService) handleAcct(w radius.ResponseWriter, r *radius.Request) {
 	case rfc2866.AcctStatusType_Value_Start:
 		ip := framedIP.String()
 		if ip == "<nil>" || ip == "" {
+			// NOTE: ocserv's Accounting-Request omits Framed-IP-Address, so OpenConnect
+			// sessions are not recorded here and User-Limit accept-eviction has nothing
+			// to evict (strategy-accept). A recovery keyed by Calling-Station-Id proved
+			// ambiguous when two devices share a station (handed the 2nd device the 1st's
+			// IP), so proper tracking needs the auth step to record the session directly.
 			logger.Debugf("RADIUS: acct-start missing Framed-IP user=%s", username)
 			return
 		}

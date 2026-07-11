@@ -208,7 +208,14 @@ net_env_setup() {
 # job on a normal run, so on success this is a no-op). Runs only on non-zero exit.
 _on_exit() {
   local rc=$?
-  [[ "$rc" -ne 0 ]] && { echo "[run] exit rc=$rc — sweeping leftover VMs/networks..." >&2; sweep; }
+  [[ "$rc" -eq 0 ]] && return
+  # keep_failed_vms honours the orchestrator's post-mortem VMs: don't let this
+  # safety-net sweep tear down the very VMs a failed run was told to keep.
+  if grep -qiE '^[[:space:]]*keep_failed_vms[[:space:]]*=[[:space:]]*true' "$SCRIPT_DIR/config.toml" 2>/dev/null; then
+    echo "[run] exit rc=$rc — keep_failed_vms=true: leaving VMs/networks for post-mortem (sweep skipped)" >&2
+  else
+    echo "[run] exit rc=$rc — sweeping leftover VMs/networks..." >&2; sweep
+  fi
 }
 trap _on_exit EXIT
 
