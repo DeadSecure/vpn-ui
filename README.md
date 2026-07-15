@@ -77,7 +77,7 @@ sudo /opt/vpn-ui/vpn-ui-amd64 --uninstall
 
 ```mermaid
 flowchart TB
-  Client["VPN Client<br/>(L2TP/IPsec · PPTP · OpenVPN · OpenConnect · SSTP · IKEv2)"]
+  Client["VPN Client<br/>(L2TP/IPsec · PPTP · OpenVPN · OpenConnect · SSTP · IKEv2 · WireGuard (C))"]
 
   subgraph PANEL["vpn-ui panel — root process"]
     PROC["procmgr<br/>supervises the daemons"]
@@ -92,7 +92,7 @@ flowchart TB
   end
 
   subgraph KERNEL["Linux kernel data plane"]
-    IFACE["ppp0 / tun0<br/>client is assigned a pool IP"]
+    IFACE["ppp0 / tun0 / wgc0<br/>client is assigned a pool IP"]
     NFT["nftables mark:<br/>UDP → TPROXY · TCP → REDIRECT"]
     RULE["ip rule fwmark 1 → table 100"]
   end
@@ -107,6 +107,7 @@ flowchart TB
 
   %% control plane
   Client -->|"tunnel + credentials"| D
+  Client -.->|"WireGuard (C): in-kernel wgc, no daemon"| IFACE
   D -.->|"MS-CHAPv2 Access-Request"| RAD
   RAD -.->|"Accept + pool IP"| D
   D -.->|"user-pass / client-connect"| HOOK
@@ -198,6 +199,7 @@ A complete **E2E** test written in Python has been designed for this project ins
 | `openconnect` | connect variants + checks + peer reachability + same-NAT user-limit (OpenConnect/ocserv) |
 | `sstp` | connect variants + checks + peer reachability (SSTP/accel-ppp, PPP-over-TLS) |
 | `ikev2` | connect + checks + peer reachability (IKEv2/IPsec, strongSwan charon; eap-mschapv2 + psk + eap-tls) |
+| `wg-c` | connect + checks + peer reachability + per-account usage/termination (WireGuard C, in-kernel wgctrl, gateway /29, + preshared-key mode) |
 | `bulk-ops` | bulk client add/sub/enable/disable + TXT/PDF export via API |
 | `backup-restore` | DB export + import round-trip |
 | `warp-socks` | Cloudflare warp-cli SOCKS install + egress |
