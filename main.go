@@ -4,9 +4,12 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"context"
+	"crypto/x509"
 	_ "embed"
 	"encoding/json"
+	"encoding/pem"
 	"flag"
 	"fmt"
 	"log"
@@ -222,6 +225,11 @@ func runWebServer() {
 			logger.Info("extracted bundled VPN daemons:", len(files), "files to", backend.BinDir())
 		}
 	}
+
+	// Ensure the `vpn-ui` management menu is installed, so the command works on a
+	// hand-deployed box that never ran deploy.sh's `install-menu`. Idempotent and
+	// best-effort; see ensureMenuInstalled.
+	ensureMenuInstalled()
 
 	// The root-only control socket the `vpn-ui-amd64 ctl` CLI (and the vpn-ui menu)
 	// drives Xray and the daemons through. Started before the servers, so it is
@@ -595,10 +603,52 @@ func applyExplicitSetting(username, password string, port int, webBasePath strin
 func panelAccessURL(settingService *service.SettingService, port int, normPath string) (ip, url string) {
 	ip = service.GetServerIPv4()
 	scheme := "http"
+	host := ip
 	if certFile, _ := settingService.GetCertFile(); certFile != "" {
 		scheme = "https"
+		// The panel serves a cert whose name is the DOMAIN (Let's Encrypt) or the
+		// server IP (self-signed). A browser sent to https://<IP> when the cert names
+		// only a domain fails the name check and the panel "does not load", so the
+		// printed link must use the cert's own host. Fall back to the detected IP when
+		// the cert has no usable name (unparsable, or CN-only with no SAN).
+		if h := certHost(certFile); h != "" {
+			host = h
+		}
 	}
-	return ip, fmt.Sprintf("%s://%s:%d%s", scheme, ip, port, normPath)
+	return ip, fmt.Sprintf("%s://%s:%d%s", scheme, host, port, normPath)
+}
+
+// certHost returns the host a browser should use to reach a panel serving certFile:
+// the leaf certificate's first DNS SAN, else its first IP SAN, else "" when the file
+// cannot be read or parsed. It reads the FIRST certificate in the PEM (the leaf; a
+// fullchain.pem puts intermediates after it) and does not fall back to the deprecated
+// CN, which browsers no longer match on.
+func certHost(certFile string) string {
+	pemData, err := os.ReadFile(certFile)
+	if err != nil {
+		return ""
+	}
+	for {
+		var block *pem.Block
+		block, pemData = pem.Decode(pemData)
+		if block == nil {
+			return ""
+		}
+		if block.Type != "CERTIFICATE" {
+			continue
+		}
+		cert, err := x509.ParseCertificate(block.Bytes)
+		if err != nil {
+			return ""
+		}
+		if len(cert.DNSNames) > 0 {
+			return cert.DNSNames[0]
+		}
+		if len(cert.IPAddresses) > 0 {
+			return cert.IPAddresses[0].String()
+		}
+		return ""
+	}
 }
 
 // panelInfo is the panel's login/access + service state, as printed by
@@ -1172,6 +1222,30 @@ func installMenuScript(args []string) {
 		os.Exit(1)
 	}
 	fmt.Printf("Installed the vpn-ui management menu -> %s (run: %s)\n", dest, filepath.Base(dest))
+}
+
+// ensureMenuInstalled writes the `vpn-ui` management menu to MenuScriptPath on panel
+// startup when it is missing or out of date, so the `vpn-ui` command exists no matter
+// how the panel was deployed. deploy.sh runs `install-menu` explicitly, but a manual
+// launch (scp the binary, `setsid ./vpn-ui-amd64 &`) never does, so the command was
+// simply absent on hand-deployed boxes.
+//
+// Compare-then-write: it only writes when the on-disk script differs from the embedded
+// one, so a restart of an up-to-date panel touches nothing. Best-effort by design: a
+// failure (read-only /usr/bin, not root) is logged and ignored. A panel that serves
+// traffic without its convenience menu beats one that refused to boot over it. The
+// atomic write (rename) is safe even if this exact file is the script currently being
+// run: bash keeps its open inode, so it reads to the end of the old file.
+func ensureMenuInstalled() {
+	dest := service.MenuScriptPath
+	if cur, err := os.ReadFile(dest); err == nil && bytes.Equal(cur, menuScript) {
+		return
+	}
+	if err := backend.WriteFileAtomic(dest, menuScript, 0o755); err != nil {
+		logger.Warning("could not install the vpn-ui management menu at", dest, ":", err)
+		return
+	}
+	logger.Info("installed the vpn-ui management menu at", dest)
 }
 
 // applyCredential updates the first user's login from the CLI: both fields set both;
