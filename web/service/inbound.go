@@ -365,6 +365,40 @@ func isVpnProtocol(p model.Protocol) bool {
 	return p == model.L2TP || p == model.PPTP || p == model.OPENVPN || p == model.OPENCONNECT || p == model.SSTP || p == model.IKEV2 || p == model.WGC || p == model.AWG
 }
 
+// isRelayProtocol reports whether p is a relay: it terminates its own protocol outside
+// Xray (telemt for mtproto, the in-binary gateway for ssh) and reaches Xray through a
+// PAIRED socks inbound the panel builds separately (GetSocksConfig), sharing this
+// inbound's tag.
+func isRelayProtocol(p model.Protocol) bool {
+	return p == model.MTPROTO || p == model.SSH
+}
+
+// hasDerivedXrayInbound reports whether what this inbound contributes to Xray is
+// something the panel DERIVES — a dokodemo-door for the VPN protocols, a socks inbound
+// for the relays — rather than GenXrayInboundConfig's own output.
+//
+// Such an inbound must never take the live del/add API path, and the relay half of that
+// is not a variation on the VPN reasoning above but the same bug with a worse ending.
+// DelInbound(tag) succeeds, because the derived inbound carries this inbound's tag, and
+// then AddInbound hands Xray a panel-only protocol ("unknown config id: mtproto") and
+// fails. The running core is left with no socks inbound, so telemt's upstream is refused
+// and every client on it is dead.
+//
+// What makes it stick is that nothing repairs it. The GENERATED config still contains
+// the derived inbound, so the running config and the generated one compare equal and
+// RestartXray takes its "does not need to restart" path, leaving the live instance
+// diverged from the config that describes it. It stays dead until some unrelated edit
+// changes the config enough to force a restart.
+//
+// Reported as "enabling the speed limit on an mtproto inbound kills the backend until
+// I restart all cores". The speed limit is only how it was found: it is delivered by the
+// speedlimits.json sidecar and touches no Xray inbound, which is exactly what leaves the
+// config byte-identical. Any inbound-level edit that does the same (remark, quota,
+// expiry, traffic multiplier) had the same effect.
+func hasDerivedXrayInbound(p model.Protocol) bool {
+	return isVpnProtocol(p) || isRelayProtocol(p)
+}
+
 // AddInbound creates a new inbound configuration.
 // It validates port uniqueness, client email uniqueness, and required fields,
 // then saves the inbound to the database and optionally adds it to the running Xray instance.
@@ -630,8 +664,11 @@ func (s *InboundService) AddInbound(inbound *model.Inbound) (*model.Inbound, boo
 
 	needRestart := false
 	if inbound.Enable {
-		if isVpnProtocol(inbound.Protocol) {
-			// Its dokodemo is added by the full restart the caller triggers.
+		if hasDerivedXrayInbound(inbound.Protocol) {
+			// Its dokodemo (VPN) or socks inbound (relay) is added by the full restart
+			// the caller triggers. Neither can be built from this inbound's own
+			// protocol, so the API path below would only log a failure and set this
+			// same flag.
 			needRestart = true
 		} else {
 			s.xrayApi.Init(p.GetAPIPort())
@@ -868,11 +905,11 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 	}
 
 	needRestart := false
-	if isVpnProtocol(oldInbound.Protocol) {
-		// Leave the running dokodemo in place — the live del/add API would drop
-		// it and be unable to recreate it, cutting the clients' internet until a
-		// full restart. The caller's on{L2tp,Pptp,OpenVpn}Changed handles the
-		// restart that rebuilds it.
+	if hasDerivedXrayInbound(oldInbound.Protocol) {
+		// Leave the running dokodemo (VPN) or socks inbound (relay) in place. The live
+		// del/add API would drop it and be unable to recreate it, cutting the clients'
+		// internet until a full restart that an unchanged config will not trigger. The
+		// caller's on<Proto>Changed handles the restart that rebuilds it.
 		needRestart = true
 	} else {
 		s.xrayApi.Init(p.GetAPIPort())
