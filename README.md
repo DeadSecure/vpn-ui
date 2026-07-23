@@ -24,9 +24,11 @@ This project is an enhanced version of the **[3X-UI](https://github.com/MHSanaei
 
 ## New Features
 
+- **Multi-Admin** with per-inbound access, so each admin only sees the inbounds you assign it
+- **Reseller** accounts with a metered traffic balance an admin recharges, spent only on the inbounds it was given
 - **Client to Client** support, even as **Cross Inbound** (an internal connection between an L2TP user and an OpenVPN user)
 - Added **AES-256-GCM** and **AES-128-GCM** **Encryption** to the **Shadowsocks** protocol
-- Support for **XHTTP Object** in **Outbound**
+- Support for **XHTTP Object** in **Inbound** and **Outbound**
 - Automatic installation script for **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (Cloudflare's official version)
 - A [patched **Xray-core**](https://github.com/Sir-MmD/Xray-core) that fixes the "Unsupported Cipher" error in the **Shadowsocks** protocol
 - Bundling all files (**Geofile**, **Xray-core**, and **Backend** cores) into a single binary

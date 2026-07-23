@@ -24,9 +24,11 @@
 
 ## الميزات الجديدة
 
+- **تعدد المشرفين** بصلاحية لكل Inbound، فكل مشرف ما يشوفش غير الـ Inbounds اللي خصصتهالوه
+- حسابات **الموزّعين** برصيد ترافيك محسوب يشحنه المشرف، ما يتصرفش غير على الـ Inbounds اللي اتدّت له
 - إمكانية **Client to Client** حتى بصيغة **Cross Inbound** (اتصال داخلي بين مستخدم L2TP ومستخدم OpenVPN)
 - إضافة **Encryption** من نوعَي **AES-256-GCM** و **AES-128-GCM** إلى بروتوكول **Shadowsocks**
-- دعم **XHTTP Object** في **Outbound**
+- دعم **XHTTP Object** في **Inbound** و **Outbound**
 - سكربت التثبيت التلقائي لـ **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (النسخة الرسمية من Cloudflare)
 - نواة [**Xray-core** المُعدَّلة](https://github.com/Sir-MmD/Xray-core) لإصلاح خطأ «Unsupported Cipher» في بروتوكول **Shadowsocks**
 - تجميع جميع الملفات (Geofile و Xray-core ونوى الـ Backend) داخل ملف ثنائي (binary) واحد

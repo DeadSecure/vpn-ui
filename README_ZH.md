@@ -24,9 +24,11 @@
 
 ## 新增功能
 
+- **多管理员**，按 Inbound 授权，每个管理员只能看到分配给他的 Inbound
+- **分销商**账户，流量额度由管理员充值计量，且只能消耗在分配给它的 Inbound 上
 - 支持 **Client to Client** 功能，甚至可以实现 **Cross Inbound**（L2TP 用户与 OpenVPN 用户之间的内部互联）
 - 为 **Shadowsocks** 协议新增了 **AES-256-GCM** 和 **AES-128-GCM** 两种 **Encryption**
-- 在 **Outbound** 中支持 **XHTTP Object**
+- 在 **Inbound** 和 **Outbound** 中支持 **XHTTP Object**
 - **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)**（Cloudflare 官方版本）自动安装脚本
 - 经过[补丁修复的 **Xray-core**](https://github.com/Sir-MmD/Xray-core) 内核，用于修复 **Shadowsocks** 协议中的「Unsupported Cipher」错误
 - 将所有文件（Geofile、Xray-core 以及 Backend 内核）打包进单个二进制文件中

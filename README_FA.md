@@ -24,9 +24,11 @@
 
 ## امکانات جدید
 
+- **چند مدیره** با دسترسی جداگانه به هر Inbound، هر مدیر فقط Inbound هایی را می‌بیند که به او داده‌اید
+- حساب‌های **نماینده** با اعتبار ترافیک که مدیر آن را شارژ می‌کند و فقط روی Inbound های داده‌شده خرج می‌شود
 - قابلیت **Client to Client** حتی بصورت **Cross Inbound** (اتصال داخلی کاربر L2TP به کاربر OpenVPN)
 - اضافه‌شدن **Encryption** های **AES-256-GCM** و **AES-128-GCM** به پروتکل **Shadowsocks**
-- پشتیبانی از **XHTTP Object** در **Outbound**
+- پشتیبانی از **XHTTP Object** در **Inbound** و **Outbound**
 - اسکریپت نصب خودکار **[WARP-CLI](https://github.com/Sir-MmD/warp-cli)** (نسخه‌ی رسمی Cloudflare)
 - هسته‌ی [**Xray-core** پچ‌شده](https://github.com/Sir-MmD/Xray-core) برای رفع خطای «Unsupported Cipher» در پروتکل **Shadowsocks**
 - باندل‌شدن همه‌ی فایل‌ها (Geofile، Xray-core و هسته‌های Backend) داخل یک فایل باینریِ واحد
