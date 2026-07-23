@@ -63,6 +63,7 @@
 "security" = "安全"
 "secAlertTitle" = "安全警報"
 "secAlertSsl" = "此連線不安全。在啟用 TLS 進行資料保護之前，請勿輸入敏感資訊。"
+"secAlertDismiss" = "不再顯示"
 "secAlertConf" = "某些設定易受攻擊。建議加強安全協議以防止潛在漏洞。"
 "secAlertSSL" = "面板缺少安全連線。請安裝 TLS 證書以保護資料安全。"
 "secAlertPanelPort" = "面板預設埠存在安全風險。請配置隨機埠或特定埠。"
@@ -110,6 +111,8 @@
 "hello" = "你好"
 "title" = "歡迎"
 "loginAgain" = "登入時效已過，請重新登入"
+"showPassword" = "顯示密碼"
+"hidePassword" = "隱藏密碼"
 
 [pages.login.toasts]
 "invalidFormData" = "資料格式錯誤"
@@ -425,6 +428,29 @@
 "statusDescription" = "狀態說明"
 "requestHeader" = "請求頭"
 "responseHeader" = "響應頭"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "不使用 gRPC 標頭"
+"scMinPostsIntervalMs" = "最小上傳間隔 (毫秒)"
+"serverMaxHeaderBytes" = "最大請求標頭大小 (位元組)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "最大並行數"
+"xmuxMaxConnections" = "最大連線數"
+"xmuxConflict" = "最大連線數與最大並行數是兩種互斥的策略。請只設定其中一個，另一個保持為 0。"
+"xmuxCMaxReuseTimes" = "連線最大重用次數"
+"xmuxHMaxRequestTimes" = "每連線最大請求數"
+"xmuxHMaxReusableSecs" = "連線最長存活 (秒)"
+"xmuxHKeepAlivePeriod" = "保活週期 (秒)"
+"downloadSettings" = "下載設定"
+"downloadSettingsDesc" = "選填的 JSON 傳輸設定，讓下行走另一條傳輸通道。留空則上下行共用目前的傳輸方式。"
+"downloadSettingsInvalid" = "JSON 格式錯誤，無法儲存此入站："
+"downloadSettingsStreamOne" = "stream-one 模式不支援下載設定。請清除該欄位或改用其他模式。"
+"headersHost" = "這裡不允許名為 host 的標頭，請改用上方的 Host 欄位。"
+"paddingBytesInvalid" = "填充不能只關一半。範圍兩端都要大於 0，或者直接留空。"
+"uplinkMethodGetMode" = "GET 僅在 packet-up 模式下可用。請換一個方法或切換模式。"
+"uplinkDataPlacementUnsupported" = "這裡只支援 body、header 與 cookie。"
+"uplinkDataPlacementMode" = "該放置方式僅在 packet-up 模式下可用，而模式已被更改。請清除後再儲存。"
+"serverMaxHeaderBytesNegative" = "此值不能為負數。填 0 表示交由核心決定。"
 
 [pages.settings]
 "title" = "面板設定"

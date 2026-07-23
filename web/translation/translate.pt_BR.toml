@@ -63,6 +63,7 @@
 "security" = "Segurança"
 "secAlertTitle" = "Alerta de Segurança"
 "secAlertSsl" = "Esta conexão não é segura. Evite inserir informações confidenciais até que o TLS seja ativado para proteção de dados."
+"secAlertDismiss" = "Não mostrar novamente"
 "secAlertConf" = "Algumas configurações estão vulneráveis a ataques. Recomenda-se reforçar os protocolos de segurança para evitar possíveis violações."
 "secAlertSSL" = "O painel não possui uma conexão segura. Instale o certificado TLS para proteção de dados."
 "secAlertPanelPort" = "A porta padrão do painel é vulnerável. Configure uma porta aleatória ou específica."
@@ -110,6 +111,8 @@
 "hello" = "Olá"
 "title" = "Bem-vindo"
 "loginAgain" = "Sua sessão expirou, faça login novamente"
+"showPassword" = "Mostrar senha"
+"hidePassword" = "Ocultar senha"
 
 [pages.login.toasts]
 "invalidFormData" = "O formato dos dados de entrada é inválido."
@@ -425,6 +428,29 @@
 "statusDescription" = "Descrição do Status"
 "requestHeader" = "Cabeçalho da Requisição"
 "responseHeader" = "Cabeçalho da Resposta"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "Sem cabeçalho gRPC"
+"scMinPostsIntervalMs" = "Intervalo mínimo entre envios (ms)"
+"serverMaxHeaderBytes" = "Tamanho máximo do cabeçalho (bytes)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Concorrência máxima"
+"xmuxMaxConnections" = "Conexões máximas"
+"xmuxConflict" = "Conexões máximas e concorrência máxima são estratégias alternativas. Defina uma e deixe a outra em 0."
+"xmuxCMaxReuseTimes" = "Reusos máximos"
+"xmuxHMaxRequestTimes" = "Requisições por conexão"
+"xmuxHMaxReusableSecs" = "Vida máx. conexão (s)"
+"xmuxHKeepAlivePeriod" = "Período Keep-Alive (s)"
+"downloadSettings" = "Configurações de download"
+"downloadSettingsDesc" = "Configurações de transporte em JSON (opcional) para puxar a descida por um transporte separado. Deixe vazio para que os dois sentidos usem este transporte."
+"downloadSettingsInvalid" = "JSON inválido, não é possível salvar a entrada:"
+"downloadSettingsStreamOne" = "O modo stream-one não aceita configurações de download. Limpe o campo ou escolha outro modo."
+"headersHost" = "Um cabeçalho chamado host não é permitido aqui. Use o campo Host acima."
+"paddingBytesInvalid" = "O preenchimento não pode ficar pela metade. As duas pontas do intervalo precisam ser maiores que 0, ou deixe o campo vazio."
+"uplinkMethodGetMode" = "GET só funciona no modo packet-up. Escolha outro método ou mude o modo."
+"uplinkDataPlacementUnsupported" = "Aqui só há suporte para body, header e cookie."
+"uplinkDataPlacementMode" = "Essa colocação só funciona no modo packet-up, e o modo mudou. Limpe o campo para salvar."
+"serverMaxHeaderBytesNegative" = "Este valor não pode ser negativo. Deixe 0 para o núcleo decidir."
 
 [pages.settings]
 "title" = "Configurações do Painel"

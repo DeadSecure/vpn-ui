@@ -20,7 +20,11 @@
 <a-spin :spinning="loadingStates.spinning" :delay="200" :tip="loadingTip" size="large">
   <transition name="list" appear>
     <a-alert type="error" v-if="showAlert && loadingStates.fetched" class="mb-10"
-      message='{{ i18n "secAlertTitle" }}' color="red" description='{{ i18n "secAlertSsl" }}' show-icon closable>
+      message='{{ i18n "secAlertTitle" }}' color="red" show-icon closable>
+      <template slot="description">
+        <div>{{ i18n "secAlertSsl" }}</div>
+        <a-button class="sec-alert-dismiss" size="small" @click="dismissSecAlert">{{ i18n "secAlertDismiss" }}</a-button>
+      </template>
     </a-alert>
   </transition>
 
@@ -2057,6 +2061,12 @@
         }
         this.distroModal.visible = false;
       },
+      // The banner's own X is a session dismiss and needs no handler; this is
+      // the permanent one, and it silences the banner on every page.
+      dismissSecAlert() {
+        SecAlertDismissal.dismiss();
+        this.showAlert = false;
+      },
       vpnCoreStatuses() {
         const order = ['l2tp', 'ipsec', 'pptp', 'openvpn', 'openconnect', 'sstp', 'ikev2', 'wgc', 'awg', 'mtproto', 'ssh', 'radius'];
         const byName = {};
@@ -2430,7 +2440,7 @@
       },
     },
     async mounted() {
-      if (window.location.protocol !== "https:") {
+      if (window.location.protocol !== "https:" && !SecAlertDismissal.isDismissed()) {
         this.showAlert = true;
       }
 

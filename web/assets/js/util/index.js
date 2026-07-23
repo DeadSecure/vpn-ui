@@ -700,6 +700,37 @@ class CookieManager {
     }
 }
 
+// Permanent dismissal of the no-TLS security banner.
+//
+// The banner has two ways out and they are NOT the same. Its own close button
+// (a-alert's `closable` X) hides it for this page view only, so the warning is
+// back on the next navigation. This flag is the other one: "don't show this
+// again" outlives the tab and is honoured by every page that renders the
+// banner, so dismissing it once on the Overview also silences Inbounds and
+// Xray.
+//
+// Storage follows the convention already set by the unsupported-distro warning
+// on the dashboard: a `vpnui.`-namespaced localStorage key, written inside a
+// try/catch because a browser with storage denied (private mode, blocked
+// third-party context) throws on setItem and must not take the page with it.
+class SecAlertDismissal {
+    static KEY = 'vpnui.secAlertDismissed';
+
+    static isDismissed() {
+        try {
+            return localStorage.getItem(SecAlertDismissal.KEY) === 'true';
+        } catch (e) {
+            return false;
+        }
+    }
+
+    static dismiss() {
+        try {
+            localStorage.setItem(SecAlertDismissal.KEY, 'true');
+        } catch (e) { /* ignore */ }
+    }
+}
+
 class ColorUtils {
     static usageColor(data, threshold, total) {
         switch (true) {

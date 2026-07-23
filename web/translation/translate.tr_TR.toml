@@ -63,6 +63,7 @@
 "security" = "Güvenlik"
 "secAlertTitle" = "Güvenlik Uyarısı"
 "secAlertSsl" = "Bu bağlantı güvenli değil. Verilerin korunması için TLS etkinleştirilene kadar hassas bilgiler girmekten kaçının."
+"secAlertDismiss" = "Bir daha gösterme"
 "secAlertConf" = "Bazı ayarlar saldırılara açıktır. Olası ihlalleri önlemek için güvenlik protokollerini güçlendirmeniz önerilir."
 "secAlertSSL" = "Panelde güvenli bağlantı yok. Verilerin korunması için TLS sertifikası yükleyin."
 "secAlertPanelPort" = "Panel varsayılan portu savunmasız. Rastgele veya belirli bir port yapılandırın."
@@ -110,6 +111,8 @@
 "hello" = "Merhaba"
 "title" = "Hoş Geldiniz"
 "loginAgain" = "Oturum süreniz doldu, lütfen tekrar giriş yapın"
+"showPassword" = "Parolayı göster"
+"hidePassword" = "Parolayı gizle"
 
 [pages.login.toasts]
 "invalidFormData" = "Girdi verisi formatı geçersiz."
@@ -425,6 +428,29 @@
 "statusDescription" = "Durum Açıklaması"
 "requestHeader" = "İstek Başlığı"
 "responseHeader" = "Yanıt Başlığı"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "gRPC Başlığı Yok"
+"scMinPostsIntervalMs" = "En Az Gönderim Aralığı (ms)"
+"serverMaxHeaderBytes" = "En Büyük Başlık Boyutu (Bayt)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Azami Eşzamanlılık"
+"xmuxMaxConnections" = "Azami Bağlantı"
+"xmuxConflict" = "Azami bağlantı ve azami eşzamanlılık birbirinin alternatifidir. Birini ayarlayın, diğerini 0 bırakın."
+"xmuxCMaxReuseTimes" = "Azami Yeniden Kullanım"
+"xmuxHMaxRequestTimes" = "Bağlantı Başına İstek"
+"xmuxHMaxReusableSecs" = "Azami Bağ. Ömrü (sn)"
+"xmuxHKeepAlivePeriod" = "Keep-Alive Süresi (sn)"
+"downloadSettings" = "İndirme Ayarları"
+"downloadSettingsDesc" = "İndirme yönünü ayrı bir taşıma üzerinden çekmek için isteğe bağlı JSON akış ayarları. Boş bırakılırsa her iki yön de bu taşımayı kullanır."
+"downloadSettingsInvalid" = "Geçersiz JSON, gelen bağlantı kaydedilemez:"
+"downloadSettingsStreamOne" = "stream-one modu İndirme Ayarlarına izin vermez. Alanı temizleyin ya da başka bir mod seçin."
+"headersHost" = "Burada host adlı bir başlık kullanılamaz. Yukarıdaki Host alanını kullanın."
+"paddingBytesInvalid" = "Dolgu yarım kapatılamaz. Aralığın iki ucu da 0 üzerinde olmalı, ya da alanı boş bırakın."
+"uplinkMethodGetMode" = "GET yalnızca packet-up modunda çalışır. Başka bir yöntem seçin ya da modu değiştirin."
+"uplinkDataPlacementUnsupported" = "Burada yalnızca body, header ve cookie desteklenir."
+"uplinkDataPlacementMode" = "Bu yerleşim yalnızca packet-up modunda çalışır ve mod değişti. Kaydetmek için temizleyin."
+"serverMaxHeaderBytesNegative" = "Bu değer negatif olamaz. Çekirdeğin karar vermesi için 0 bırakın."
 
 [pages.settings]
 "title" = "Panel Ayarları"

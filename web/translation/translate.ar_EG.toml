@@ -63,6 +63,7 @@
 "security" = "أمان"
 "secAlertTitle" = "تنبيه أمني"
 "secAlertSsl" = "الاتصال ده مش آمن. ابعد عن إدخال معلومات حساسة لغاية ما تشغل TLS لحماية البيانات."
+"secAlertDismiss" = "ماتظهرش تاني"
 "secAlertConf" = "بعض الإعدادات معرضة لهجمات. ينصح بتعزيز بروتوكولات الأمان عشان تمنع الاختراقات المحتملة."
 "secAlertSSL" = "البانل مش مؤمن. حمّل شهادة TLS لحماية البيانات."
 "secAlertPanelPort" = "بورت البانل الافتراضي معرض للخطر. ياريت تغير لبورت عشوائي أو محدد."
@@ -110,6 +111,8 @@
 "hello" = "أهلا"
 "title" = "أهلاً وسهلاً"
 "loginAgain" = "انتهت صلاحية الجلسة، سجل دخول تاني"
+"showPassword" = "إظهار الباسورد"
+"hidePassword" = "إخفاء الباسورد"
 
 [pages.login.toasts]
 "invalidFormData" = "تنسيق البيانات المدخلة مش صحيح."
@@ -425,6 +428,29 @@
 "statusDescription" = "وصف الحالة"
 "requestHeader" = "رأس الطلب"
 "responseHeader" = "رأس الرد"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "بدون ترويسة gRPC"
+"scMinPostsIntervalMs" = "أقل فاصل بين الطلبات (مللي ثانية)"
+"serverMaxHeaderBytes" = "أقصى حجم للترويسة (بايت)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "أقصى تزامن"
+"xmuxMaxConnections" = "أقصى عدد اتصالات"
+"xmuxConflict" = "أقصى عدد اتصالات وأقصى تزامن خياران بديلان. اضبط أحدهما واترك الآخر على 0."
+"xmuxCMaxReuseTimes" = "أقصى إعادة استخدام"
+"xmuxHMaxRequestTimes" = "أقصى طلبات لكل اتصال"
+"xmuxHMaxReusableSecs" = "أقصى عمر اتصال (ث)"
+"xmuxHKeepAlivePeriod" = "فترة Keep-Alive (ث)"
+"downloadSettings" = "إعدادات التنزيل"
+"downloadSettingsDesc" = "إعدادات نقل اختيارية بصيغة JSON لجلب اتجاه التنزيل عبر ناقل منفصل. اتركه فارغًا ليستخدم الاتجاهان هذا الناقل."
+"downloadSettingsInvalid" = "صيغة JSON غير صحيحة، لذا لا يمكن حفظ الاتصال الوارد:"
+"downloadSettingsStreamOne" = "وضع stream-one لا يسمح بإعدادات التنزيل. امسحها أو اختر وضعًا آخر."
+"headersHost" = "لا يُسمح هنا بترويسة اسمها host. استخدم حقل Host بالأعلى."
+"paddingBytesInvalid" = "لا يمكن تعطيل الحشو جزئيًا. يجب أن يكون طرفا المدى أكبر من 0، أو اترك الحقل فارغًا."
+"uplinkMethodGetMode" = "‏GET يعمل في وضع packet-up فقط. اختر طريقة أخرى أو غيّر الوضع."
+"uplinkDataPlacementUnsupported" = "المدعوم هنا هو body و header و cookie فقط."
+"uplinkDataPlacementMode" = "هذا الموضع يعمل في وضع packet-up فقط، وقد تغيّر الوضع. امسحه حتى تتمكن من الحفظ."
+"serverMaxHeaderBytesNegative" = "لا يمكن أن تكون هذه القيمة سالبة. اترك 0 ليقرر النواة."
 
 [pages.settings]
 "title" = "إعدادات البانل"

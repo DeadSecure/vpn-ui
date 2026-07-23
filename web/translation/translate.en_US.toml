@@ -63,6 +63,7 @@
 "security" = "Security"
 "secAlertTitle" = "Security Alert"
 "secAlertSsl" = "This connection is not secure. Please avoid entering sensitive information until TLS is activated for data protection."
+"secAlertDismiss" = "Don't show this again"
 "secAlertConf" = "Certain settings are vulnerable to attacks. It is recommended to reinforce security protocols to prevent potential breaches."
 "secAlertSSL" = "Panel lacks secure connection. Please install TLS certificate for data protection."
 "secAlertPanelPort" = "Panel default port is vulnerable. Please configure a random or specific port."
@@ -197,6 +198,8 @@
 "hello" = "Hello"
 "title" = "Welcome"
 "loginAgain" = "Your session has expired, please log in again"
+"showPassword" = "Show password"
+"hidePassword" = "Hide password"
 
 [pages.login.toasts]
 "invalidFormData" = "The Input data format is invalid."
@@ -548,6 +551,29 @@
 "statusDescription" = "Status Desc"
 "requestHeader" = "Request Header"
 "responseHeader" = "Response Header"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "No gRPC Header"
+"scMinPostsIntervalMs" = "Min Post Interval (ms)"
+"serverMaxHeaderBytes" = "Max Header Size (Byte)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Max Concurrency"
+"xmuxMaxConnections" = "Max Connections"
+"xmuxConflict" = "Max Connections and Max Concurrency are alternative strategies. Set one and leave the other at 0."
+"xmuxCMaxReuseTimes" = "Max Conn Reuses"
+"xmuxHMaxRequestTimes" = "Max Requests/Conn"
+"xmuxHMaxReusableSecs" = "Max Conn Age (sec)"
+"xmuxHKeepAlivePeriod" = "Keep-Alive Period (sec)"
+"downloadSettings" = "Download Settings"
+"downloadSettingsDesc" = "Optional stream settings, as JSON, for pulling the downlink over a separate transport. Leave empty to carry both directions over this one."
+"downloadSettingsInvalid" = "Invalid JSON, so the inbound cannot be saved:"
+"downloadSettingsStreamOne" = "stream-one mode does not allow Download Settings. Clear it or pick another mode."
+"headersHost" = "A header named host is not allowed here. Use the Host field above."
+"paddingBytesInvalid" = "Padding cannot be half off. Give both ends of the range a value above 0, or leave it empty."
+"uplinkMethodGetMode" = "GET works only in packet-up mode. Pick another method or switch the mode."
+"uplinkDataPlacementUnsupported" = "Only body, header and cookie are supported here."
+"uplinkDataPlacementMode" = "This placement works only in packet-up mode, and the mode has changed. Clear it to save."
+"serverMaxHeaderBytesNegative" = "This cannot be negative. Use 0 to let the core decide."
 
 [pages.settings]
 "title" = "Panel Settings"

@@ -63,6 +63,7 @@
 "security" = "Безопасность"
 "secAlertTitle" = "Предупреждение системы безопасности"
 "secAlertSsl" = "Соединение не защищено. Не вводите конфиденциальные данные до установки SSL-сертификата."
+"secAlertDismiss" = "Больше не показывать"
 "secAlertConf" = "Некоторые настройки уязвимы. Рекомендуется усилить защиту для предотвращения атак."
 "secAlertSSL" = "Подключение к панели не защищено. Установите SSL-сертификат для защиты данных."
 "secAlertPanelPort" = "Порт панели по умолчанию небезопасен. Установите нестандартный или случайный порт."
@@ -110,6 +111,8 @@
 "hello" = "Привет!"
 "title" = "Добро пожаловать!"
 "loginAgain" = "Сессия истекла. Войдите в систему снова"
+"showPassword" = "Показать пароль"
+"hidePassword" = "Скрыть пароль"
 
 [pages.login.toasts]
 "invalidFormData" = "Недопустимый формат данных"
@@ -425,6 +428,29 @@
 "statusDescription" = "Описание статуса"
 "requestHeader" = "Заголовок запроса"
 "responseHeader" = "Заголовок ответа"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "Без заголовка gRPC"
+"scMinPostsIntervalMs" = "Мин. интервал между запросами (мс)"
+"serverMaxHeaderBytes" = "Макс. размер заголовка (байт)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Макс. параллельных"
+"xmuxMaxConnections" = "Макс. соединений"
+"xmuxConflict" = "Макс. соединений и макс. параллельных потоков это две разные стратегии. Задайте одну, вторую оставьте на 0."
+"xmuxCMaxReuseTimes" = "Макс. повторов соед."
+"xmuxHMaxRequestTimes" = "Макс. запросов/соед."
+"xmuxHMaxReusableSecs" = "Макс. возраст соед. (с)"
+"xmuxHKeepAlivePeriod" = "Период Keep-Alive (с)"
+"downloadSettings" = "Настройки загрузки"
+"downloadSettingsDesc" = "Необязательные настройки транспорта в формате JSON для отдельного канала загрузки. Оставьте пустым, чтобы оба направления шли через текущий транспорт."
+"downloadSettingsInvalid" = "Некорректный JSON, входящее соединение не будет сохранено:"
+"downloadSettingsStreamOne" = "Режим stream-one не допускает настройки загрузки. Очистите поле или выберите другой режим."
+"headersHost" = "Заголовок с именем host здесь запрещен. Используйте поле Host выше."
+"paddingBytesInvalid" = "Заполнение нельзя отключить наполовину. Оба конца диапазона должны быть больше 0, либо оставьте поле пустым."
+"uplinkMethodGetMode" = "GET работает только в режиме packet-up. Выберите другой метод или смените режим."
+"uplinkDataPlacementUnsupported" = "Здесь поддерживаются только body, header и cookie."
+"uplinkDataPlacementMode" = "Это размещение работает только в режиме packet-up, а режим изменился. Очистите его, чтобы сохранить."
+"serverMaxHeaderBytesNegative" = "Значение не может быть отрицательным. Оставьте 0, чтобы решало ядро."
 
 [pages.settings]
 "title" = "Настройки"

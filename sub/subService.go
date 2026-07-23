@@ -1,11 +1,13 @@
 package sub
 
 import (
+	"bytes"
 	"encoding/base64"
 	"fmt"
 	"maps"
 	"net"
 	"net/url"
+	"reflect"
 	"slices"
 	"strings"
 	"time"
@@ -579,25 +581,23 @@ func applyShareNetworkParams(stream map[string]any, streamNetwork string, params
 		xhttp, _ := stream["xhttpSettings"].(map[string]any)
 		applyPathAndHostParams(xhttp, params)
 		params["mode"], _ = xhttp["mode"].(string)
-		applyXhttpPaddingParams(xhttp, params)
+		applyXhttpShareParams(xhttp, params)
 	}
 }
 
-func applyXhttpPaddingObj(xhttp map[string]any, obj map[string]any) {
-	// VMess base64 JSON supports arbitrary keys; copy the padding
-	// settings through so clients can match the server's xhttp
-	// xPaddingBytes range and, when the admin opted into obfs
-	// mode, the custom key / header / placement / method.
-	if xpb, ok := xhttp["xPaddingBytes"].(string); ok && len(xpb) > 0 {
-		obj["x_padding_bytes"] = xpb
-	}
-	if obfs, ok := xhttp["xPaddingObfsMode"].(bool); ok && obfs {
-		obj["xPaddingObfsMode"] = true
-		for _, field := range []string{"xPaddingKey", "xPaddingHeader", "xPaddingPlacement", "xPaddingMethod"} {
-			if v, ok := xhttp[field].(string); ok && len(v) > 0 {
-				obj[field] = v
-			}
+// applyXhttpShareObj is the VMess variant of applyXhttpShareParams: VMess
+// links are a base64-encoded JSON object, so the fields go straight into that
+// JSON instead of into a query string.
+func applyXhttpShareObj(xhttp map[string]any, obj map[string]any) {
+	for field, value := range collectXhttpShareFields(xhttp) {
+		if field == "xPaddingBytes" {
+			// The padding range has always ridden along under the flat
+			// sing-box style name here; keep it so clients already in the
+			// field keep reading it.
+			obj["x_padding_bytes"] = value
+			continue
 		}
+		obj[field] = value
 	}
 }
 
@@ -634,8 +634,20 @@ func applyVmessNetworkParams(stream map[string]any, network string, obj map[stri
 	case "xhttp":
 		xhttp, _ := stream["xhttpSettings"].(map[string]any)
 		applyPathAndHostObj(xhttp, obj)
-		obj["mode"], _ = xhttp["mode"].(string)
-		applyXhttpPaddingObj(xhttp, obj)
+		mode, _ := xhttp["mode"].(string)
+		obj["mode"] = mode
+		// The mode goes out under both names on purpose. This generator has
+		// always written it as `mode` (which is also the only name our own
+		// vmess importer, Outbound.fromVmessLink, reads), while the panel's
+		// copy-link button has always written it as `type` (where v2rayN-family
+		// clients read the per-network sub-type). Emitting both is the union of
+		// the two shipped behaviours, so the two links finally agree without
+		// regressing either client. Left as "none" when the blob carries no
+		// mode at all, so a mode-less inbound keeps the link it had.
+		if mode != "" {
+			obj["type"] = mode
+		}
+		applyXhttpShareObj(xhttp, obj)
 	}
 }
 
@@ -923,28 +935,264 @@ func searchKey(data any, key string) (any, bool) {
 	return nil, false
 }
 
-// applyXhttpPaddingParams copies the xPadding* fields from an xhttpSettings
-// map into the URL query params of a vless:// / trojan:// / ss:// link.
+// xhttpModeledKeys are the xhttpSettings keys the panel form models
+// structurally. Anything else in the blob (a hand edit, xray's own nested
+// `extra` object, a key from a newer core) is passed through to the client
+// verbatim. Mirrors xHTTPStreamSettings.STRUCTURED_KEYS in
+// web/assets/js/model/inbound.js.
+var xhttpModeledKeys = map[string]struct{}{
+	"path": {}, "host": {}, "headers": {}, "scMaxBufferedPosts": {},
+	"scMaxEachPostBytes": {}, "scStreamUpServerSecs": {}, "noSSEHeader": {},
+	"xPaddingBytes": {}, "mode": {}, "xPaddingObfsMode": {}, "xPaddingKey": {},
+	"xPaddingHeader": {}, "xPaddingPlacement": {}, "xPaddingMethod": {},
+	"uplinkHTTPMethod": {}, "sessionPlacement": {}, "sessionKey": {},
+	"seqPlacement": {}, "seqKey": {}, "uplinkDataPlacement": {},
+	"uplinkDataKey": {}, "uplinkChunkSize": {}, "noGRPCHeader": {},
+	"scMinPostsIntervalMs": {}, "serverMaxHeaderBytes": {}, "xmux": {},
+	"downloadSettings": {},
+}
+
+// xhttpShareDefaults is the value the xhttp form starts each field on. A share
+// link only carries a field once the admin has actually moved it off this
+// default: a stock xhttp inbound has to keep producing a short link (QR codes
+// stop being scannable fast) and links handed out before this existed must not
+// change.
 //
-// Before this helper existed, only path / host / mode were propagated,
-// so a server configured with a non-default xPaddingBytes (e.g. 80-600)
-// or with xPaddingObfsMode=true + custom xPaddingKey / xPaddingHeader
-// would silently diverge from the client: the client kept defaults,
-// hit the server, and was rejected by its padding validation
-// ("invalid padding" in the inbound log) — the client-visible symptom
-// was "xhttp doesn't connect" on OpenWRT / sing-box.
+// Numbers are float64 because these come out of encoding/json, so a value that
+// is a string in the stored blob never compares equal to a numeric default and
+// is (correctly) shared. Mirrors XHTTP_SHARE_DEFAULTS in inbound.js.
 //
-// Two encodings are written so every popular client can read at least one:
+// SCALARS ONLY. The values here are compared against whatever the stored blob
+// holds, and comparing two `any` values that both carry the same uncomparable
+// dynamic type (a map, a slice) panics at runtime, which would take the whole
+// subscription endpoint down. xmux and downloadSettings are objects and are
+// therefore handled explicitly in collectXhttpShareFields, not from this table.
+var xhttpShareDefaults = map[string]any{
+	"scMaxBufferedPosts":   float64(30),
+	"scMaxEachPostBytes":   "1000000",
+	"scStreamUpServerSecs": "20-80",
+	"uplinkChunkSize":      float64(0),
+	"scMinPostsIntervalMs": "30",
+	"serverMaxHeaderBytes": float64(0),
+}
+
+// xhttpShareFields are the plain scalar xhttp settings copied through as-is
+// once they differ from xhttpShareDefaults (no default means "skip when
+// empty"). The xPadding* / headers / noSSEHeader / noGRPCHeader fields need
+// shaping and xmux / downloadSettings are objects, so collectXhttpShareFields
+// handles all of those explicitly instead.
+var xhttpShareFields = []string{
+	"scMaxBufferedPosts", "scMaxEachPostBytes", "scStreamUpServerSecs",
+	"uplinkHTTPMethod", "sessionPlacement", "sessionKey", "seqPlacement",
+	"seqKey", "uplinkDataPlacement", "uplinkDataKey", "uplinkChunkSize",
+	"scMinPostsIntervalMs", "serverMaxHeaderBytes",
+}
+
+// xhttpXmuxDefaults are xray's own xmux defaults, which are also what both
+// panel forms start on. Mirrors XHTTP_XMUX_DEFAULTS in
+// web/assets/js/model/inbound.js; the numbers are float64 for the same reason
+// as in xhttpShareDefaults (they arrive through encoding/json).
+var xhttpXmuxDefaults = map[string]any{
+	"maxConcurrency":   "16-32",
+	"maxConnections":   float64(0),
+	"cMaxReuseTimes":   float64(0),
+	"hMaxRequestTimes": "600-900",
+	"hMaxReusableSecs": "1800-3000",
+	"hKeepAlivePeriod": float64(0),
+}
+
+// normalizeXhttpXmux fills in every xmux key the stored blob left out, so the
+// client is handed the same six values the panel form shows.
 //
-//   - x_padding_bytes=<range>  — flat param, understood by sing-box and its
-//     derivatives (Podkop, OpenWRT sing-box, Karing, NekoBox, …).
-//   - extra=<url-encoded-json> — full xhttp settings blob, which is how
-//     xray-core clients (v2rayNG, Happ, Furious, Exclave, …) pick up the
-//     obfs-mode key / header / placement / method.
+// A key that is PRESENT but empty is kept as-is rather than pushed back to the
+// default. The core reads an empty Int32Range as 0 (ParseRangeString treats ""
+// as zero, it does not reject it), and 0 is the only way to say "this strategy
+// is off": clearing maxConcurrency is exactly how an admin switches to the
+// maxConnections strategy, and the two settings are mutually exclusive. Unknown
+// sub-keys (a newer core's cMaxLifetimeMs, a hand edit) ride along untouched.
 //
-// Anything that doesn't map to a non-empty value is skipped, so simple
-// inbounds (no custom padding) produce exactly the same URL as before.
-func applyXhttpPaddingParams(xhttp map[string]any, params map[string]string) {
+// Mirrors xHTTPStreamSettings.normalizeXmux in web/assets/js/model/inbound.js.
+func normalizeXhttpXmux(raw any) map[string]any {
+	out := make(map[string]any, len(xhttpXmuxDefaults))
+	for key, value := range xhttpXmuxDefaults {
+		out[key] = value
+	}
+	src, ok := raw.(map[string]any)
+	if !ok {
+		return out
+	}
+	for key, value := range src {
+		if value == nil {
+			continue
+		}
+		out[key] = value
+	}
+	return out
+}
+
+// normalizeXhttpDownloadSettings reduces downloadSettings to "a non-empty JSON
+// object, or nothing". A null, a scalar, an array or an empty object all mean
+// not set, and the key then has to be omitted entirely rather than shared
+// empty: xray builds a whole StreamConfig out of whatever is there, and an
+// empty one is not the same thing as none. Mirrors
+// xHTTPStreamSettings.normalizeDownloadSettings in inbound.js.
+func normalizeXhttpDownloadSettings(raw any) map[string]any {
+	obj, ok := raw.(map[string]any)
+	if !ok || len(obj) == 0 {
+		return nil
+	}
+	return obj
+}
+
+// collectXhttpShareFields gathers every xhttp setting a client has to match
+// the server on, minus path / host / mode which the link already carries as
+// its own top-level params.
+//
+// An xhttp client that guesses any of these wrong does not degrade, it fails.
+// Before this existed only path / host / mode plus the xPadding* subset were
+// propagated, so a server configured with a custom session/seq/uplink
+// placement, an uplink HTTP method or extra headers silently diverged from the
+// client: the client kept xray's defaults, hit the server and was rejected
+// (the padding case logs "invalid padding" on the inbound; the client-visible
+// symptom was "xhttp doesn't connect").
+//
+// Mirrored on the JS side by Inbound.collectXhttpShareFields in
+// web/assets/js/model/inbound.js. The two generators have to agree key for
+// key, because the panel's copy-link button and the subscription URL must not
+// hand out two different configs for one inbound.
+func collectXhttpShareFields(xhttp map[string]any) map[string]any {
+	out := map[string]any{}
+	if xhttp == nil {
+		return out
+	}
+
+	// Unmodeled keys ride through verbatim.
+	for key, value := range xhttp {
+		if _, modeled := xhttpModeledKeys[key]; modeled {
+			continue
+		}
+		out[key] = value
+	}
+
+	// xPaddingBytes is emitted even when it still holds the panel default,
+	// which is what this generator has always done. Clients already in the
+	// field read it, so narrowing it now would break working links.
+	if xpb, ok := xhttp["xPaddingBytes"].(string); ok && len(xpb) > 0 {
+		out["xPaddingBytes"] = xpb
+	}
+	if obfs, ok := xhttp["xPaddingObfsMode"].(bool); ok && obfs {
+		out["xPaddingObfsMode"] = true
+		// The obfs-mode-only fields: only populate the ones the admin
+		// actually set, so xray-core falls back to its own defaults for
+		// the rest instead of seeing spurious empty strings.
+		for _, field := range []string{"xPaddingKey", "xPaddingHeader", "xPaddingPlacement", "xPaddingMethod"} {
+			if v, ok := xhttp[field].(string); ok && len(v) > 0 {
+				out[field] = v
+			}
+		}
+	}
+
+	if headers := normalizeXhttpHeaders(xhttp["headers"]); len(headers) > 0 {
+		out["headers"] = headers
+	}
+	if noSSE, ok := xhttp["noSSEHeader"].(bool); ok && noSSE {
+		out["noSSEHeader"] = true
+	}
+	if noGRPC, ok := xhttp["noGRPCHeader"].(bool); ok && noGRPC {
+		out["noGRPCHeader"] = true
+	}
+
+	for _, field := range xhttpShareFields {
+		value, present := xhttp[field]
+		if !present || value == nil {
+			continue
+		}
+		if s, isStr := value.(string); isStr && s == "" {
+			continue
+		}
+		// reflect.DeepEqual and not ==: comparing two `any` values panics at
+		// runtime when both hold the same uncomparable dynamic type, and the
+		// values on the left come straight out of a stored blob that anyone
+		// with panel access can hand-edit into a map or a slice. A panic here
+		// takes the subscription endpoint down for every client, not just the
+		// one inbound, so the comparison has to be one that cannot panic.
+		if def, hasDefault := xhttpShareDefaults[field]; hasDefault && reflect.DeepEqual(value, def) {
+			continue
+		}
+		out[field] = value
+	}
+
+	// xmux and downloadSettings are objects, so they stay out of the scalar
+	// loop above and out of xhttpShareDefaults entirely (see the note there).
+	//
+	// xmux goes on the wire only once the admin has moved a knob off the stock
+	// set, and then it goes whole: a partial xmux would leave the client
+	// filling the gaps from its own defaults, which is the exact kind of silent
+	// server/client divergence this function exists to prevent.
+	if xmux := normalizeXhttpXmux(xhttp["xmux"]); !reflect.DeepEqual(xmux, xhttpXmuxDefaults) {
+		out["xmux"] = xmux
+	}
+
+	// downloadSettings has no default at all, so it rides verbatim whenever it
+	// is set. Except in stream-one mode, where the core rejects it outright
+	// (transport_internet.go: `Can not use "downloadSettings" in "stream-one"
+	// mode.`) and rejects the entire config with it. The panel will not save
+	// that combination, but a blob hand-edited outside the panel can still hold
+	// it, and a link no client can build is worse than a link that quietly
+	// drops one key.
+	if download := normalizeXhttpDownloadSettings(xhttp["downloadSettings"]); download != nil {
+		if mode, _ := xhttp["mode"].(string); mode != "stream-one" {
+			out["downloadSettings"] = download
+		}
+	}
+
+	return out
+}
+
+// normalizeXhttpHeaders flattens a stored headers map to the name -> single
+// string shape xray expects on the client side. The panel always writes that
+// shape, but an imported or hand-edited inbound can carry the multi-value
+// name -> [v1, v2] form; the panel form collapses that to the last value when
+// it loads (XrayCommonClass.toV2Headers), so do the same here rather than let
+// the two generators disagree. Entries with an empty name or value are
+// dropped, again matching toV2Headers.
+func normalizeXhttpHeaders(raw any) map[string]any {
+	headers, ok := raw.(map[string]any)
+	if !ok {
+		return nil
+	}
+	out := make(map[string]any, len(headers))
+	for name, value := range headers {
+		if name == "" {
+			continue
+		}
+		switch v := value.(type) {
+		case string:
+			if v != "" {
+				out[name] = v
+			}
+		case []any:
+			if len(v) == 0 {
+				continue
+			}
+			if last, isStr := v[len(v)-1].(string); isStr && last != "" {
+				out[name] = last
+			}
+		}
+	}
+	return out
+}
+
+// applyXhttpShareParams writes the xhttp settings into the URL query params of
+// a vless:// / trojan:// / ss:// link. Two encodings are used so every popular
+// client can read at least one:
+//
+//   - x_padding_bytes=<range>  flat param, understood by sing-box and its
+//     derivatives (Podkop, OpenWRT sing-box, Karing, NekoBox) which never
+//     look inside `extra`.
+//   - extra=<url-encoded-json> the whole xhttp object, which is how xray-core
+//     clients (v2rayNG, Happ, Furious, Exclave) pick it up.
+func applyXhttpShareParams(xhttp map[string]any, params map[string]string) {
 	if xhttp == nil {
 		return
 	}
@@ -953,27 +1201,28 @@ func applyXhttpPaddingParams(xhttp map[string]any, params map[string]string) {
 		params["x_padding_bytes"] = xpb
 	}
 
-	extra := map[string]any{}
-	if xpb, ok := xhttp["xPaddingBytes"].(string); ok && len(xpb) > 0 {
-		extra["xPaddingBytes"] = xpb
-	}
-	if obfs, ok := xhttp["xPaddingObfsMode"].(bool); ok && obfs {
-		extra["xPaddingObfsMode"] = true
-		// The obfs-mode-only fields: only populate the ones the admin
-		// actually set, so xray-core falls back to its own defaults for
-		// the rest instead of seeing spurious empty strings.
-		for _, field := range []string{"xPaddingKey", "xPaddingHeader", "xPaddingPlacement", "xPaddingMethod"} {
-			if v, ok := xhttp[field].(string); ok && len(v) > 0 {
-				extra[field] = v
-			}
-		}
-	}
-
+	extra := collectXhttpShareFields(xhttp)
 	if len(extra) > 0 {
-		if b, err := json.Marshal(extra); err == nil {
+		if b, err := marshalShareJSON(extra); err == nil {
 			params["extra"] = string(b)
 		}
 	}
+}
+
+// marshalShareJSON writes JSON the way JavaScript's JSON.stringify does.
+// encoding/json escapes the three HTML-significant characters (less-than,
+// greater-than, ampersand) into their \u form by default, which would make
+// this blob differ byte for byte from the one the panel's copy-link button
+// builds for the very same inbound. One header value carrying an ampersand
+// is enough to trigger it.
+func marshalShareJSON(v any) ([]byte, error) {
+	var buf bytes.Buffer
+	encoder := json.NewEncoder(&buf)
+	encoder.SetEscapeHTML(false)
+	if err := encoder.Encode(v); err != nil {
+		return nil, err
+	}
+	return bytes.TrimRight(buf.Bytes(), "\n"), nil
 }
 
 var kcpMaskToHeaderType = map[string]string{

@@ -63,6 +63,7 @@
 "security" = "Bảo vệ"
 "secAlertTitle" = "Cảnh báo an ninh-Tiếng Việt by Ohoang7"
 "secAlertSsl" = "Kết nối này không an toàn; Vui lòng không nhập thông tin nhạy cảm cho đến khi TLS được kích hoạt để bảo vệ dữ liệu của Bạn"
+"secAlertDismiss" = "Không hiển thị lại"
 "secAlertConf" = "Một số cài đặt có thể dễ bị tấn công. Đề xuất tăng cường các giao thức bảo mật để ngăn chặn các vi phạm tiềm ẩn."
 "secAlertSSL" = "Bảng điều khiển thiếu kết nối an toàn. Vui lòng cài đặt chứng chỉ TLS để bảo vệ dữ liệu."
 "secAlertPanelPort" = "Cổng mặc định của bảng điều khiển có thể dễ bị tấn công. Vui lòng cấu hình một cổng ngẫu nhiên hoặc cụ thể."
@@ -110,6 +111,8 @@
 "hello" = "Xin chào"
 "title" = "Chào mừng"
 "loginAgain" = "Thời hạn đăng nhập đã hết. Vui lòng đăng nhập lại."
+"showPassword" = "Hiện mật khẩu"
+"hidePassword" = "Ẩn mật khẩu"
 
 [pages.login.toasts]
 "invalidFormData" = "Dạng dữ liệu nhập không hợp lệ."
@@ -425,6 +428,29 @@
 "statusDescription" = "Tình trạng Mô tả"
 "requestHeader" = "Header yêu cầu"
 "responseHeader" = "Header phản hồi"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "Không dùng header gRPC"
+"scMinPostsIntervalMs" = "Khoảng cách gửi tối thiểu (ms)"
+"serverMaxHeaderBytes" = "Kích thước header tối đa (Byte)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Đồng thời tối đa"
+"xmuxMaxConnections" = "Kết nối tối đa"
+"xmuxConflict" = "Kết nối tối đa và đồng thời tối đa là hai chiến lược thay thế nhau. Hãy đặt một cái và để cái còn lại bằng 0."
+"xmuxCMaxReuseTimes" = "Tái dùng tối đa"
+"xmuxHMaxRequestTimes" = "Yêu cầu/kết nối tối đa"
+"xmuxHMaxReusableSecs" = "Tuổi kết nối tối đa (s)"
+"xmuxHKeepAlivePeriod" = "Chu kỳ Keep-Alive (s)"
+"downloadSettings" = "Cài đặt tải xuống"
+"downloadSettingsDesc" = "Cài đặt luồng dạng JSON (tùy chọn) để kéo chiều tải xuống qua một transport riêng. Để trống thì cả hai chiều dùng chung transport này."
+"downloadSettingsInvalid" = "JSON không hợp lệ nên không thể lưu inbound:"
+"downloadSettingsStreamOne" = "Chế độ stream-one không cho phép Cài đặt tải xuống. Hãy xóa nó hoặc chọn chế độ khác."
+"headersHost" = "Không được dùng header tên host ở đây. Hãy dùng ô Host phía trên."
+"paddingBytesInvalid" = "Không thể tắt một nửa phần đệm. Cả hai đầu của dải phải lớn hơn 0, hoặc để trống."
+"uplinkMethodGetMode" = "GET chỉ chạy được ở chế độ packet-up. Hãy chọn phương thức khác hoặc đổi chế độ."
+"uplinkDataPlacementUnsupported" = "Ở đây chỉ hỗ trợ body, header và cookie."
+"uplinkDataPlacementMode" = "Vị trí này chỉ chạy ở chế độ packet-up, mà chế độ đã bị đổi. Hãy xóa nó để lưu được."
+"serverMaxHeaderBytesNegative" = "Giá trị này không được âm. Để 0 nếu muốn nhân dùng mặc định."
 
 [pages.settings]
 "title" = "Cài đặt"

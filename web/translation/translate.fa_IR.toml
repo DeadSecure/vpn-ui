@@ -63,6 +63,7 @@
 "security" = "امنیت"
 "secAlertTitle" = "هشدار‌امنیتی"
 "secAlertSsl" = "این‌اتصال‌امن نیست. لطفا‌ تازمانی‌که تی‌ال‌اس برای محافظت از‌ داده‌ها فعال نشده‌است، از وارد کردن اطلاعات حساس خودداری کنید"
+"secAlertDismiss" = "دیگر نمایش داده نشود"
 "secAlertConf" = "تنظیمات خاصی در برابر حملات آسیب پذیر هستند. توصیه می‌شود پروتکل‌های امنیتی را برای جلوگیری از نفوذ احتمالی تقویت کنید"
 "secAlertSSL" = "پنل فاقد ارتباط امن است. لطفاً یک گواهینامه تی‌ال‌اس برای محافظت از داده‌ها نصب کنید"
 "secAlertPanelPort" = "استفاده از پورت پیش‌فرض پنل ناامن است. لطفاً یک پورت تصادفی یا خاص تنظیم کنید"
@@ -110,6 +111,8 @@
 "hello" = "سلام"
 "title" = "خوش‌آمدید"
 "loginAgain" = "مدت زمان استفاده به‌اتمام‌رسیده، لطفا دوباره وارد شوید"
+"showPassword" = "نمایش رمزعبور"
+"hidePassword" = "پنهان کردن رمزعبور"
 
 [pages.login.toasts]
 "invalidFormData" = "اطلاعات به‌درستی وارد نشده‌است"
@@ -425,6 +428,29 @@
 "statusDescription" = "توضیحات وضعیت"
 "requestHeader" = "سربرگ درخواست"
 "responseHeader" = "سربرگ پاسخ"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "بدون هدر gRPC"
+"scMinPostsIntervalMs" = "کمترین فاصله بین درخواست‌ها (میلی‌ثانیه)"
+"serverMaxHeaderBytes" = "بیشترین اندازه هدر (بایت)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "بیشترین هم‌زمانی"
+"xmuxMaxConnections" = "بیشترین تعداد اتصال"
+"xmuxConflict" = "بیشترین تعداد اتصال و بیشترین هم‌زمانی دو راهکار متفاوت هستند. یکی را تنظیم کنید و دیگری را روی ۰ بگذارید."
+"xmuxCMaxReuseTimes" = "بیشترین استفاده مجدد"
+"xmuxHMaxRequestTimes" = "بیشترین درخواست/اتصال"
+"xmuxHMaxReusableSecs" = "بیشترین عمر اتصال (ث)"
+"xmuxHKeepAlivePeriod" = "دوره Keep-Alive (ث)"
+"downloadSettings" = "تنظیمات دانلود"
+"downloadSettingsDesc" = "تنظیمات جریان به شکل JSON برای دریافت مسیر دانلود از یک ترنسپورت جدا. خالی بگذارید تا هر دو جهت از همین ترنسپورت عبور کنند."
+"downloadSettingsInvalid" = "JSON نامعتبر است و اینباند ذخیره نمی‌شود:"
+"downloadSettingsStreamOne" = "حالت stream-one از تنظیمات دانلود پشتیبانی نمی‌کند. آن را پاک کنید یا حالت دیگری انتخاب کنید."
+"headersHost" = "هدری با نام host اینجا مجاز نیست. از فیلد Host بالا استفاده کنید."
+"paddingBytesInvalid" = "پدینگ را نمی‌توان نیمه‌فعال کرد. هر دو سر بازه باید بزرگ‌تر از ۰ باشند، یا فیلد را خالی بگذارید."
+"uplinkMethodGetMode" = "GET فقط در حالت packet-up کار می‌کند. متد دیگری انتخاب کنید یا حالت را عوض کنید."
+"uplinkDataPlacementUnsupported" = "فقط body و header و cookie اینجا پشتیبانی می‌شوند."
+"uplinkDataPlacementMode" = "این گزینه فقط در حالت packet-up کار می‌کند و حالت تغییر کرده است. برای ذخیره آن را پاک کنید."
+"serverMaxHeaderBytesNegative" = "این مقدار نمی‌تواند منفی باشد. برای واگذاری به هسته، ۰ بگذارید."
 
 [pages.settings]
 "title" = "تنظیمات پنل"

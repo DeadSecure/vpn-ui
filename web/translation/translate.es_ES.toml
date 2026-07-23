@@ -63,6 +63,7 @@
 "security" = "Seguridad"
 "secAlertTitle" = "Alerta de Seguridad"
 "secAlertSsl" = "Esta conexión no es segura. Por favor, evite ingresar información sensible hasta que se active TLS para la protección de datos."
+"secAlertDismiss" = "No volver a mostrar"
 "secAlertConf" = "Ciertas configuraciones son vulnerables a ataques. Se recomienda reforzar los protocolos de seguridad para prevenir posibles violaciones."
 "secAlertSSL" = "El panel carece de una conexión segura. Por favor, instale un certificado TLS para la protección de datos."
 "secAlertPanelPort" = "El puerto predeterminado del panel es vulnerable. Por favor, configure un puerto aleatorio o específico."
@@ -110,6 +111,8 @@
 "hello" = "Hola"
 "title" = "Bienvenido"
 "loginAgain" = "El límite de tiempo de inicio de sesión ha expirado. Por favor, inicia sesión nuevamente."
+"showPassword" = "Mostrar contraseña"
+"hidePassword" = "Ocultar contraseña"
 
 [pages.login.toasts]
 "invalidFormData" = "El formato de los datos de entrada es inválido."
@@ -425,6 +428,29 @@
 "statusDescription" = "Descripción de la Situación"
 "requestHeader" = "Encabezado de solicitud"
 "responseHeader" = "Encabezado de respuesta"
+
+[pages.inbounds.stream.xhttp]
+"noGRPCHeader" = "Sin cabecera gRPC"
+"scMinPostsIntervalMs" = "Intervalo mínimo entre envíos (ms)"
+"serverMaxHeaderBytes" = "Tamaño máximo de cabecera (bytes)"
+"xmux" = "XMUX"
+"xmuxMaxConcurrency" = "Concurrencia máxima"
+"xmuxMaxConnections" = "Conexiones máximas"
+"xmuxConflict" = "Conexiones máximas y concurrencia máxima son estrategias alternativas. Configura una y deja la otra en 0."
+"xmuxCMaxReuseTimes" = "Reúsos máximos"
+"xmuxHMaxRequestTimes" = "Peticiones por conexión"
+"xmuxHMaxReusableSecs" = "Vida máx. conexión (s)"
+"xmuxHKeepAlivePeriod" = "Periodo Keep-Alive (s)"
+"downloadSettings" = "Ajustes de descarga"
+"downloadSettingsDesc" = "Ajustes de transporte en JSON (opcional) para traer la bajada por un transporte aparte. Déjalo vacío para que ambos sentidos usen este transporte."
+"downloadSettingsInvalid" = "JSON no válido, no se puede guardar la entrada:"
+"downloadSettingsStreamOne" = "El modo stream-one no admite ajustes de descarga. Bórralos o elige otro modo."
+"headersHost" = "Aquí no se admite una cabecera llamada host. Usa el campo Host de arriba."
+"paddingBytesInvalid" = "El relleno no se puede desactivar a medias. Ambos extremos del rango deben superar 0, o deja el campo vacío."
+"uplinkMethodGetMode" = "GET solo funciona en modo packet-up. Elige otro método o cambia el modo."
+"uplinkDataPlacementUnsupported" = "Aquí solo se admiten body, header y cookie."
+"uplinkDataPlacementMode" = "Esta ubicación solo funciona en modo packet-up, y el modo ha cambiado. Bórrala para poder guardar."
+"serverMaxHeaderBytesNegative" = "Este valor no puede ser negativo. Deja 0 para que decida el núcleo."
 
 [pages.settings]
 "title" = "Configuraciones"

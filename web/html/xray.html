@@ -15,8 +15,11 @@
         <transition name="list" appear>
           <a-alert type="error" v-if="showAlert && loadingStates.fetched"
             :style="{ marginBottom: '10px' }"
-            message='{{ i18n "secAlertTitle" }}' color="red"
-            description='{{ i18n "secAlertSsl" }}' show-icon closable>
+            message='{{ i18n "secAlertTitle" }}' color="red" show-icon closable>
+            <template slot="description">
+              <div>{{ i18n "secAlertSsl" }}</div>
+              <a-button class="sec-alert-dismiss" size="small" @click="dismissSecAlert">{{ i18n "secAlertDismiss" }}</a-button>
+            </template>
           </a-alert>
         </transition>
         <transition name="list" appear>
@@ -1109,10 +1112,16 @@
         } catch (e) {
           console.error('Failed to load custom geo aliases:', e);
         }
+      },
+      // The banner's own X is a session dismiss and needs no handler; this is
+      // the permanent one, and it silences the banner on every page.
+      dismissSecAlert() {
+        SecAlertDismissal.dismiss();
+        this.showAlert = false;
       }
     },
     async mounted() {
-      if (window.location.protocol !== "https:") {
+      if (window.location.protocol !== "https:" && !SecAlertDismissal.isDismissed()) {
         this.showAlert = true;
       }
       await this.getXraySetting();
